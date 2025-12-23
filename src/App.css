@@ -1,0 +1,472 @@
+/*
+==========================================================
+                    REACT HOOKS CHEAT SHEET
+==========================================================
+
+1️⃣ useState – “State Keeper”
+----------------------------------------------------------
+- Purpose: Store values that can change and trigger re-render.
+- Think: A box where you keep a value, and when you update it, React redraws the component.
+- Syntax:
+  const [value, setValue] = useState(initialValue);
+
+- Example:
+  const [count, setCount] = useState(0);
+  <button onClick={() => setCount(count + 1)}>Add</button>
+  
+- Key: Use it for anything that changes in the UI like input values, toggles, counters.
+
+----------------------------------------------------------
+2️⃣ useEffect – “Side Effect Handler”
+----------------------------------------------------------
+- Purpose: Run code AFTER render. Useful for fetching data, subscriptions, or interacting with browser APIs.
+- Think: A reminder note that says: “After render, do this.”
+- Syntax:
+  useEffect(() => {
+    // code runs after render
+  }, [dependencies]);
+
+- Dependencies:
+  [] → run once (component did mount)
+  [x] → run whenever x changes
+  no array → runs after every render
+
+- Example:
+  useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  }, [count]);
+
+----------------------------------------------------------
+3️⃣ useRef – “Persistent Reference”
+----------------------------------------------------------
+- Purpose: Keep a reference to a DOM element or any value that doesn’t trigger re-render.
+- Think: A sticky note; you can check or update it anytime, but React ignores it for rendering.
+- Syntax:
+  const ref = useRef(initialValue);
+
+- Example (focus input):
+  const inputRef = useRef(null);
+  <input ref={inputRef} />
+  inputRef.current.focus(); // focuses input
+
+- Also used to store timers, previous values, or mutable variables that persist across renders.
+
+----------------------------------------------------------
+4️⃣ useMemo – “Performance Optimizer”
+----------------------------------------------------------
+- Purpose: Memorize a computed value to avoid expensive recalculation on every render.
+- Think: Solve a math problem once, write it down, reuse the answer.
+- Syntax:
+  const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+
+- Example:
+  const expensiveResult = useMemo(() => {
+    return heavyCalculation(count);
+  }, [count]);
+
+- Key: Only use for performance optimization; it won’t change your UI logic.
+
+----------------------------------------------------------
+💡 Quick Metaphors:
+- useState → A box that triggers UI updates
+- useEffect → A post-it note “do this after render”
+- useRef → A sticky note that React ignores for re-render
+- useMemo → Notebook with precomputed answers
+
+==========================================================
+*/
+
+/*
+====================================================================
+📒 NOTES APP – FULL DEEP EXPLANATION (BEGINNER → CONFIDENT)
+====================================================================
+
+👉 This file explains EVERYTHING that happens in your notes app.
+👉 Read slowly. Come back again and again.
+👉 This explanation matches your exact code.
+
+====================================================================
+🧠 BIG PICTURE – HOW THE APP WORKS
+====================================================================
+
+This is a NOTES APP with:
+- Create note
+- Read note
+- Update note
+- Delete note
+- Save notes even after refresh
+- Search notes
+- Sort notes
+
+This app is made of 4 MAIN PARTS:
+
+1️⃣ App.jsx        → Brain of the app (state, routes, storage)
+2️⃣ Home.jsx       → Shows all notes (list page)
+3️⃣ NewNotes.jsx   → Create / Edit / Delete notes
+4️⃣ PromptClamp.jsx→ Cut long text (See More / Less)
+
+App.jsx owns the data.
+Other pages USE that data.
+
+====================================================================
+1️⃣ App.jsx – ROOT / BRAIN OF THE APP
+====================================================================
+
+📌 This file decides:
+- Where data lives
+- Which page is shown
+- When Nav shows
+- Saving notes to localStorage
+
+------------------------------------------------
+🔹 useState for notes
+------------------------------------------------
+
+const [notes, setNotes] = useState(() => {
+  const savedNotes = localStorage.getItem("notes");
+  return savedNotes ? JSON.parse(savedNotes) : [];
+});
+
+WHAT IS HAPPENING LINE BY LINE?
+
+- useState stores notes array
+- We pass a FUNCTION to useState (important!)
+- That function runs ONLY ONCE (first render)
+
+Why function?
+👉 So localStorage is NOT read again and again
+
+localStorage.getItem("notes")
+- Reads saved notes from browser storage
+- Returns STRING or null
+
+JSON.parse(savedNotes)
+- Converts string → JavaScript array
+
+If nothing saved → empty array []
+
+------------------------------------------------
+🔹 useEffect for localStorage
+------------------------------------------------
+
+useEffect(() => {
+  localStorage.setItem("notes", JSON.stringify(notes));
+}, [notes]);
+
+WHAT THIS MEANS:
+
+- Whenever `notes` changes
+- Save latest notes into localStorage
+
+JSON.stringify(notes)
+- Converts JS array → string
+(localStorage only stores strings)
+
+[notes] (dependency array)
+- Effect runs ONLY when notes changes
+
+------------------------------------------------
+🔹 URL logic for Nav
+------------------------------------------------
+
+let url = window.location.href.split("/").pop();
+
+- Gets last part of URL
+- Example:
+  http://localhost:5173/NewNotes?id=123
+  → NewNotes?id=123
+
+if (url.includes("?")) {
+  url = url.split("?")[0];
+}
+
+- Removes query params
+- Final result → "NewNotes"
+
+allowedUrls = ["", "NewNotes"]
+
+{allowedUrls.includes(url) && <Nav />}
+
+- Shows Nav ONLY on:
+  ✔ Home
+  ✔ NewNotes
+- Hides Nav on NotFound
+
+------------------------------------------------
+🔹 Routes
+------------------------------------------------
+
+<Routes>
+  <Route index element={<Home notes={notes} setNotes={setNotes} />} />
+  <Route path="/NewNotes" element={<NewNotes notes={notes} setNotes={setNotes} />} />
+  <Route path="*" element={<NotFound />} />
+</Routes>
+
+IMPORTANT IDEA:
+- App owns notes
+- App passes notes & setNotes to children
+- This is called "lifting state up"
+
+====================================================================
+2️⃣ Home.jsx – NOTES LIST PAGE
+====================================================================
+
+📌 Purpose:
+- Show all notes
+- Search notes
+- Sort notes
+- Click note → edit page
+
+------------------------------------------------
+🔹 useState in Home
+------------------------------------------------
+
+const [searchFilter, setSearchFilter] = useState("");
+const [sortBy, setSortBy] = useState("recent");
+
+- searchFilter → text user types
+- sortBy → selected sorting option
+
+------------------------------------------------
+🔹 Filtering notes
+------------------------------------------------
+
+const filteredNotes = notes.filter((note) => {
+  return (
+    note.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
+    note.body.toLowerCase().includes(searchFilter.toLowerCase())
+  );
+});
+
+STEP BY STEP:
+- filter() loops through notes
+- toLowerCase() → case-insensitive
+- includes() → checks matching text
+- If title OR body matches → keep note
+
+------------------------------------------------
+🔹 Sorting notes
+------------------------------------------------
+
+const sortedNotes = [...filteredNotes].sort((a, b) => {
+
+WHY [...filteredNotes] ?
+- sort() CHANGES original array
+- NEVER mutate state directly
+- Spread creates a COPY
+
+if (sortBy === "alphabet") {
+  return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
+}
+
+- localeCompare compares strings
+- Returns:
+  - negative → a before b
+  - positive → b before a
+
+if (sortBy === "lastEdited") {
+  return b.updatedAt - a.updatedAt;
+}
+
+- Bigger timestamp first
+
+return b.createdAt - a.createdAt;
+- Default → newest first
+
+------------------------------------------------
+🔹 Rendering notes
+------------------------------------------------
+
+sortedNotes.map((note) => (
+  <div
+    key={note.id}
+    onClick={() => navigate(`/NewNotes?id=${note.id}`)}
+  >
+
+- map() converts data → UI
+- key helps React track items
+- Clicking navigates with note id
+- id travels via URL
+
+====================================================================
+3️⃣ NewNotes.jsx – CREATE / EDIT / DELETE
+====================================================================
+
+📌 Purpose:
+- Same page for:
+  ✔ Create new note
+  ✔ Edit existing note
+  ✔ Delete note
+
+------------------------------------------------
+🔹 Local state
+------------------------------------------------
+
+const [notesTitle, setNotesTitle] = useState("");
+const [notesBody, setNotesBody] = useState("");
+
+- Controlled inputs
+- UI always synced with state
+
+------------------------------------------------
+🔹 Reading ID from URL
+------------------------------------------------
+
+const [searchParams] = useSearchParams();
+const id = searchParams.get("id");
+
+- Reads ?id=123
+- Returns string or null
+
+const editingId = id ? Number(id) : null;
+
+- Convert to number
+- null means "new note"
+
+------------------------------------------------
+🔹 Find editing note
+------------------------------------------------
+
+const editingNote = notes.find((note) => note.id === editingId);
+
+- find() returns ONE note
+- If not found → undefined
+
+------------------------------------------------
+🔹 useEffect to fill inputs
+------------------------------------------------
+
+useEffect(() => {
+  if (editingNote) {
+    setNotesTitle(editingNote.title);
+    setNotesBody(editingNote.body);
+  } else {
+    setNotesTitle("");
+    setNotesBody("");
+  }
+}, [editingNote]);
+
+WHY?
+- When user clicks note
+- editingNote changes
+- Inputs auto-fill
+- If new note → inputs cleared
+
+------------------------------------------------
+🔹 Add Note
+------------------------------------------------
+
+handleAdd():
+- Validate inputs
+- Create note object
+- Add using [...notes, newNote]
+- Navigate home
+
+IMPORTANT:
+- Never push()
+- Always create new array
+
+------------------------------------------------
+🔹 Edit Note
+------------------------------------------------
+
+notes.map((note) =>
+  note.id === editingId
+    ? { ...note, title, body, updatedAt }
+    : note
+)
+
+- map loops all notes
+- Updates only matching note
+- Keeps others unchanged
+
+------------------------------------------------
+🔹 Remove Note
+------------------------------------------------
+
+notes.filter(note => note.id !== editingId)
+
+- filter removes matching note
+- Returns new array
+
+------------------------------------------------
+🔹 Conditional UI
+------------------------------------------------
+
+editingId === null
+- Show "Add Note"
+
+else
+- Show "Update" + "Remove"
+
+This is CONDITIONAL RENDERING.
+
+====================================================================
+4️⃣ PromptClamp.jsx – SEE MORE / LESS
+====================================================================
+
+📌 Purpose:
+- Cut long text
+- Expand on click
+
+------------------------------------------------
+🔹 State
+------------------------------------------------
+
+isExpanded → show full text or not
+shouldCut → text longer than 100 chars?
+
+------------------------------------------------
+🔹 useEffect
+------------------------------------------------
+
+useEffect(() => {
+  setShouldCut(text.length > 100);
+}, [text]);
+
+- Runs when text changes
+- Decides if "See More" needed
+
+------------------------------------------------
+🔹 stopPropagation
+------------------------------------------------
+
+e.stopPropagation();
+
+- Prevents click bubbling
+- Stops opening note when clicking "See More"
+
+====================================================================
+🧠 CORE REACT CONCEPTS YOU LEARNED
+====================================================================
+
+✔ useState → store UI data
+✔ useEffect → sync side effects
+✔ Props → pass data
+✔ Immutability → map/filter/spread
+✔ Routing → pages & navigation
+✔ Query params → editing logic
+✔ Conditional rendering → smart UI
+✔ localStorage → persistence
+
+====================================================================
+🚀 FINAL NOTE
+====================================================================
+
+This is NOT beginner React anymore.
+You built a REAL production-style app.
+
+If you understand THIS,
+you can build:
+- Todo apps
+- Blogs
+- Dashboards
+- CRUD apps
+
+Keep revisiting this file.
+This is your React foundation.
+
+====================================================================
+END
+====================================================================
+*/
