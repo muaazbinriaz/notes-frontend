@@ -27,7 +27,7 @@ const NewNotes = ({ notes, setNotes }) => {
       return alert("Both fields are required");
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/website/notes/insert`,
+        `${import.meta.env.VITE_BASE_URL}/api/website/notes/insert`,
         {
           title: notesTitle,
           body: notesBody,
@@ -52,7 +52,7 @@ const NewNotes = ({ notes, setNotes }) => {
       if (result.isConfirmed) {
         try {
           const res = await axios.delete(
-            `http://localhost:8000/api/website/notes/deleteNote/${id}`
+            `${import.meta.env.VITE_BASE_URL}/api/website/notes/deleteNote/${id}`
           );
 
           if (res.data.status === 1) {
@@ -75,7 +75,7 @@ const NewNotes = ({ notes, setNotes }) => {
   const handleEdit = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:8000/api/website/notes/updateNote/${id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/website/notes/updateNote/${id}`,
         {
           title: notesTitle,
           body: notesBody,

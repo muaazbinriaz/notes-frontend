@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Nav from "./components/Nav";
 import NewNotes from "./pages/NewNotes";
@@ -8,23 +8,21 @@ import axios from "axios";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
+  const location = useLocation();
+  const path = location.pathname.split("/")[1]; // '' or 'NewNotes'
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/website/notes/getNotes")
+      .get(`${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`)
       .then((res) => setNotes(res.data))
       .catch((err) => console.error(err));
   }, []);
 
-  let url = window.location.href.split("/").pop();
-  if (url.includes("?")) {
-    url = url.split("?")[0];
-  }
-
   const allowedUrls = ["", "NewNotes"];
+
   return (
     <>
-      {allowedUrls.includes(url) && <Nav />}
+      {allowedUrls.includes(path) && <Nav />}
       <Routes>
         <Route index element={<Home notes={notes} setNotes={setNotes} />} />
         <Route
