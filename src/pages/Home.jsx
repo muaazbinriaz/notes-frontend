@@ -1,12 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import PromptClamp from "../components/PromptClamp";
 import { useState } from "react";
-import { ToastContainer } from "react-toastify";
 
 const Home = ({ notes, loading }) => {
   const navigate = useNavigate();
   const [searchFilter, setSearchFilter] = useState("");
-  const [sortBy, setSortBy] = useState("recent");
+  const [sortBy, setSortBy] = useState("sort by");
 
   if (loading) {
     return (
@@ -56,24 +55,27 @@ const Home = ({ notes, loading }) => {
 
   return (
     <>
-      <ToastContainer />
       <div className="bg-[#F7F7F7] text-[18px] flex justify-center py-4">
         <div className="flex justify-center max-w-140 w-full gap-12">
           <input
             type="text"
             placeholder="Filter by"
-            className="rounded-lg max-w-50 w-full bg-white p-2"
+            className="rounded-lg max-w-50 w-full bg-[#fafafa] p-2 border border-[#437993] text-[#1f5672] focus:outline-none focus:ring-2 focus:ring-[#437993] placeholder-gray-400"
             onChange={(e) => setSearchFilter(e.target.value)}
             value={searchFilter}
           />
-          <select onChange={(e) => setSortBy(e.target.value)} value={sortBy}>
+          <select
+            className="px-3 py-2 bg-[#fafafa] rounded-lg cursor-pointer border border-[#437993] text-[#1f5672] focus:outline-none focus:ring-1 focus:ring-[#437993] hover:bg-[#437993] hover:text-white transition duration-300"
+            onChange={(e) => setSortBy(e.target.value)}
+            value={sortBy}
+          >
+            <option value="sort by">Sort By</option>
             <option value="recent">Recently Created</option>
             <option value="alphabet">Alphabet</option>
             <option value="lastEdited">Last Edited</option>
           </select>
         </div>
       </div>
-
       <div className="max-w-175 py-3 px-3 mx-auto mt-4 flex flex-col gap-2">
         {sortedNotes.map((note) => (
           <div

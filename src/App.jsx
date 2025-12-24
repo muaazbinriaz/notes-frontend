@@ -5,6 +5,7 @@ import Nav from "./components/Nav";
 import NewNotes from "./pages/NewNotes";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -22,6 +23,7 @@ const App = () => {
 
   return (
     <>
+    <ToastContainer />
       {allowedUrls.includes(path) && <Nav />}
       <Routes>
         <Route index element={<Home notes={notes} setNotes={setNotes} />} />
