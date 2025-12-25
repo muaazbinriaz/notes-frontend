@@ -1,16 +1,16 @@
 import Home from "./pages/Home";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Nav from "./components/Nav";
 import NewNotes from "./pages/NewNotes";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const location = useLocation();
-  const path = location.pathname.split("/")[1]; // '' or 'NewNotes'
 
   useEffect(() => {
     axios
@@ -19,14 +19,17 @@ const App = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const allowedUrls = ["", "NewNotes"];
-
   return (
     <>
-    <ToastContainer />
-      {allowedUrls.includes(path) && <Nav />}
+      <ToastContainer />
+      <Nav />
       <Routes>
-        <Route index element={<Home notes={notes} setNotes={setNotes} />} />
+        <Route index element={<Signup />} /> {/* ✅ default page */}
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/home"
+          element={<Home notes={notes} setNotes={setNotes} />}
+        />
         <Route
           path="/NewNotes"
           element={<NewNotes notes={notes} setNotes={setNotes} />}
