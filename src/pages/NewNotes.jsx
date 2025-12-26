@@ -59,7 +59,7 @@ const NewNotes = ({ notes, setNotes }) => {
               import.meta.env.VITE_BASE_URL
             }/api/website/notes/deleteNote/${id}`
           );
-
+          console.log(import.meta.env.VITE_BASE_URL);
           if (res.data.status === 1) {
             setNotes(notes.filter((note) => note._id !== id));
             navigate("/");
