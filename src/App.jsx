@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import Login from "./pages/Login";
-import Sign from "./pages/Sign";
+import Signup from "./pages/Signup";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -20,21 +20,26 @@ const App = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const allowedUrls = ["", "NewNotes"];
+  const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
 
   return (
     <>
       <ToastContainer />
       {allowedUrls.includes(path) && <Nav />}
       <Routes>
-        <Route index element={<Home notes={notes} setNotes={setNotes} />} />
+        <Route index element={<Signup />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         <Route
           path="/NewNotes"
           element={<NewNotes notes={notes} setNotes={setNotes} />}
         />
+        <Route
+          path="/home"
+          element={<Home notes={notes} setNotes={setNotes} />}
+        />
+        <Route path="*" element={<Navigate to="/signup" />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/Sign" element={<Sign />} />
-        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </>
   );

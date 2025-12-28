@@ -36,7 +36,7 @@ const NewNotes = ({ notes, setNotes }) => {
       );
       setNotes([...notes, response.data]);
       toast.success("Note added successfully");
-      setTimeout(() => navigate("/"), 100);
+      setTimeout(() => navigate("/home"), 100);
     } catch (err) {
       toast.error("Error adding note", err);
     } finally {
@@ -62,7 +62,7 @@ const NewNotes = ({ notes, setNotes }) => {
           console.log(import.meta.env.VITE_BASE_URL);
           if (res.data.status === 1) {
             setNotes(notes.filter((note) => note._id !== id));
-            navigate("/");
+            navigate("/home");
             Swal.fire("Deleted!", "", "success");
           } else {
             Swal.fire("Note not found in database", "", "error");
@@ -94,7 +94,7 @@ const NewNotes = ({ notes, setNotes }) => {
         );
         toast.success("Note updated successfully");
         setTimeout(() => {
-          navigate("/");
+          navigate("/home");
         }, 100);
       } else {
         alert("Note not found");
@@ -118,7 +118,7 @@ const NewNotes = ({ notes, setNotes }) => {
           <div className="bg-[#F7F7F7] text-[20px] p-3.5 flex">
             <Link
               className="max-w-175 w-full text-[#105273] hover:text-[#437993] duration-300 mx-auto"
-              to="/"
+              to="/home"
             >
               Home
             </Link>

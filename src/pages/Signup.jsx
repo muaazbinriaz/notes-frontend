@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
-function Sign() {
+function Signup() {
   const navigate = useNavigate();
   const [signupInfo, setSignupInfo] = useState({
     name: "",
@@ -29,10 +29,11 @@ function Sign() {
       const url = `${import.meta.env.VITE_BASE_URL}/api/website/auth/signup`;
       const response = await axios.post(url, { name, email, password });
 
-      if (response.data.status === 1) {
-        toast.success("Signup successful!");
+      console.log("Signup response:", response.data);
 
-        // navigate("/login");
+      if (response.data.success) {
+        toast.success("Signup successful!");
+        setTimeout(() => navigate("/home"), 1000);
       } else {
         toast.error(response.data.message || "Signup failed");
       }
@@ -126,4 +127,4 @@ function Sign() {
   );
 }
 
-export default Sign;
+export default Signup;
