@@ -6,12 +6,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+import Signup from "./pages/SignUp";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
   const location = useLocation();
-  const path = location.pathname.split("/")[1]; // '' or 'NewNotes'
+  const path = location.pathname.split("/")[1];
 
   useEffect(() => {
     axios
@@ -33,7 +33,7 @@ const App = () => {
           element={<NewNotes notes={notes} setNotes={setNotes} />}
         />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </>
