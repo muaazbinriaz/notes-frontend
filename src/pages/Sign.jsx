@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
-function SignUp() {
+function Sign() {
   const navigate = useNavigate();
   const [signupInfo, setSignupInfo] = useState({
     name: "",
@@ -32,7 +32,7 @@ function SignUp() {
       if (response.data.status === 1) {
         toast.success("Signup successful!");
 
-        navigate("/login");
+        // navigate("/login");
       } else {
         toast.error(response.data.message || "Signup failed");
       }
@@ -126,4 +126,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Sign;
