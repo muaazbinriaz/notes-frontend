@@ -10,14 +10,28 @@ import Signup from "./pages/Signup";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const path = location.pathname.split("/")[1];
 
-  useEffect(() => {
+  const fetchNotes = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setNotes([]);
+      return;
+    }
+    setLoading(true);
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`)
+      .get(`${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => setNotes(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchNotes();
   }, []);
 
   const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
@@ -25,21 +39,20 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      {allowedUrls.includes(path) && <Nav />}
+      {allowedUrls.includes(path) && <Nav fetchNotes={fetchNotes} />}
       <Routes>
-        <Route index element={<Signup />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route index element={<Signup fetchNotes={fetchNotes} />} />
+        <Route path="/signup" element={<Signup fetchNotes={fetchNotes} />} />
+        <Route path="/login" element={<Login fetchNotes={fetchNotes} />} />
         <Route
           path="/NewNotes"
           element={<NewNotes notes={notes} setNotes={setNotes} />}
         />
         <Route
           path="/home"
-          element={<Home notes={notes} setNotes={setNotes} />}
+          element={<Home notes={notes} loading={loading} />}
         />
         <Route path="*" element={<Navigate to="/signup" />} />
-        <Route path="/login" element={<Login />} />
       </Routes>
     </>
   );

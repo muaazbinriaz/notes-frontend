@@ -23,6 +23,11 @@ const NewNotes = ({ notes, setNotes }) => {
     }
   }, [editingNote, id]);
 
+  const getAuthHeader = () => {
+    const token = localStorage.getItem("token");
+    return { Authorization: `Bearer ${token}` };
+  };
+
   const handleAdd = async () => {
     if (!notesTitle.trim() || !notesBody.trim()) {
       return toast.error("Both fields are required");
@@ -32,13 +37,15 @@ const NewNotes = ({ notes, setNotes }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/insert`,
-        { title: notesTitle, body: notesBody }
+        { title: notesTitle, body: notesBody },
+        { headers: getAuthHeader() }
       );
       setNotes([...notes, response.data]);
       toast.success("Note added successfully");
       setTimeout(() => navigate("/home"), 100);
     } catch (err) {
-      toast.error("Error adding note", err);
+      toast.error("Error adding note");
+      console.error(err.response?.data || err.message);
     } finally {
       setLoading(false);
     }
@@ -57,9 +64,9 @@ const NewNotes = ({ notes, setNotes }) => {
           const res = await axios.delete(
             `${
               import.meta.env.VITE_BASE_URL
-            }/api/website/notes/deleteNote/${id}`
+            }/api/website/notes/deleteNote/${id}`,
+            { headers: getAuthHeader() }
           );
-          console.log(import.meta.env.VITE_BASE_URL);
           if (res.data.status === 1) {
             setNotes(notes.filter((note) => note._id !== id));
             navigate("/home");
@@ -82,10 +89,8 @@ const NewNotes = ({ notes, setNotes }) => {
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/updateNote/${id}`,
-        {
-          title: notesTitle,
-          body: notesBody,
-        }
+        { title: notesTitle, body: notesBody },
+        { headers: getAuthHeader() }
       );
 
       if (res.data.status === 1) {

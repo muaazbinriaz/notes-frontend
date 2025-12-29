@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
-function Login() {
+function Login({ fetchNotes }) {
   const navigate = useNavigate();
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -27,10 +27,14 @@ function Login() {
       const url = `${import.meta.env.VITE_BASE_URL}/api/website/auth/login`;
       const response = await axios.post(url, { email, password });
 
-      console.log("Login response:", response.data);
-
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
         toast.success("Login successful!");
+
+        if (typeof fetchNotes === "function") {
+          fetchNotes();
+        }
+
         setTimeout(() => navigate("/home"), 1000);
       } else {
         toast.error(response.data.message || "Login failed");
@@ -43,8 +47,8 @@ function Login() {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500">
-        <div className="w-full max-w-md bg-white p-6 rounded-md shadow-md">
+      <div className="flex items-center justify-center mt-24 ">
+        <div className="w-full max-w-md bg-gray-100 p-6 rounded-md shadow-lg">
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Login
           </h1>

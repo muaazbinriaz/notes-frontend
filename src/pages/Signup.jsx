@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
-function Signup() {
+function Signup({ fetchNotes }) {
   const navigate = useNavigate();
   const [signupInfo, setSignupInfo] = useState({
     name: "",
@@ -29,10 +28,14 @@ function Signup() {
       const url = `${import.meta.env.VITE_BASE_URL}/api/website/auth/signup`;
       const response = await axios.post(url, { name, email, password });
 
-      console.log("Signup response:", response.data);
-
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token); // ✅ save token
         toast.success("Signup successful!");
+
+        if (typeof fetchNotes === "function") {
+          fetchNotes();
+        }
+
         setTimeout(() => navigate("/home"), 1000);
       } else {
         toast.error(response.data.message || "Signup failed");
@@ -45,8 +48,8 @@ function Signup() {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500">
-        <div className="w-full max-w-md bg-white p-6 rounded-md shadow-md">
+      <div className="flex items-center justify-center mt-20 ">
+        <div className="w-full max-w-md bg-gray-100 p-6 rounded-md shadow-md">
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Signup
           </h1>
