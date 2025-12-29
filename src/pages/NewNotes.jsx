@@ -42,7 +42,7 @@ const NewNotes = ({ notes, setNotes }) => {
         { headers: getAuthHeader() }
       );
       setNotes([...notes, response.data]);
-      navigate("/home", { state: { message: "Note added successfully" } });
+      localStorage.setItem("noteAdded", "true");
     } catch (err) {
       console.error(err.response?.data || err.message);
       navigate("/home", { state: { error: "Error adding note" } });
