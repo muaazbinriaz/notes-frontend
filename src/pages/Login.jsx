@@ -56,7 +56,7 @@ function Login({ fetchNotes }) {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 mb-1 "
               >
                 Email
               </label>

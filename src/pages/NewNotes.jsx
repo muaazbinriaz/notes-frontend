@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const NewNotes = ({ notes, setNotes }) => {
   const [notesTitle, setNotesTitle] = useState("");
@@ -30,9 +30,8 @@ const NewNotes = ({ notes, setNotes }) => {
 
   const handleAdd = async () => {
     if (!notesTitle.trim() || !notesBody.trim()) {
-      return navigate("/home", {
-        state: { error: "Both fields are required" },
-      });
+      toast.error("Both fields are required");
+      return;
     }
 
     setLoading(true);
@@ -43,11 +42,13 @@ const NewNotes = ({ notes, setNotes }) => {
         { headers: getAuthHeader() }
       );
       setNotes([...notes, response.data]);
-      navigate("/home");
-      toast.success("Login successful!");
+      toast.success("Note added successfully", {
+        onClose: () => navigate("/home"),
+      });
     } catch (err) {
       console.error(err.response?.data || err.message);
-      navigate("/home", { state: { error: "Error adding note" } });
+      toast.error("Error adding note");
+      navigate("/home");
     } finally {
       setLoading(false);
     }
@@ -56,10 +57,9 @@ const NewNotes = ({ notes, setNotes }) => {
   const handleRemove = async () => {
     Swal.fire({
       title: "Do you want to delete the note?",
-      showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: "Delete",
-      denyButtonText: `Don't Delete`,
+      confirmButtonColor: "red",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -71,17 +71,16 @@ const NewNotes = ({ notes, setNotes }) => {
           );
           if (res.data.status === 1) {
             setNotes(notes.filter((note) => note._id !== id));
-            navigate("/home", {
-              state: { message: "Note deleted successfully" },
-            });
+            toast.success("Note deleted successfully");
+            navigate("/home");
           } else {
-            navigate("/home", {
-              state: { error: "Note not found in database" },
-            });
+            toast.error("Note not found in database");
+            navigate("/home");
           }
         } catch (err) {
           console.error(err);
-          navigate("/home", { state: { error: "Error deleting note" } });
+          toast.error("Error deleting note");
+          navigate("/home");
         }
       } else if (result.isDenied) {
         Swal.fire("Note is not deleted", "", "info");
@@ -102,13 +101,16 @@ const NewNotes = ({ notes, setNotes }) => {
         setNotes(
           notes.map((note) => (note._id === id ? res.data.updatedNote : note))
         );
-        navigate("/home", { state: { message: "Note updated successfully" } });
+        toast.success("Note updated successfully");
+        navigate("/home");
       } else {
-        navigate("/home", { state: { error: "Note not found" } });
+        toast.error("Note not found");
+        navigate("/home");
       }
     } catch (err) {
       console.error(err);
-      navigate("/home", { state: { error: "Error updating note" } });
+      toast.error("Error updating note");
+      navigate("/home");
     } finally {
       setLoading(false);
     }

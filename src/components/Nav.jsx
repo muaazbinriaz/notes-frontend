@@ -9,7 +9,7 @@ const Nav = ({ fetchNotes }) => {
     if (typeof fetchNotes === "function") {
       fetchNotes();
     }
-    navigate("/login");
+    navigate("/");
   };
 
   return (
@@ -21,7 +21,7 @@ const Nav = ({ fetchNotes }) => {
       {token && (
         <button
           onClick={handleLogout}
-          className="bg-blue-600 hover:bg-red-600 transition duration-300 text-white px-4 py-2 rounded-md"
+          className="bg-blue-600 hover:bg-blue-500 transition duration-300 text-white px-4 py-2 rounded-md"
         >
           Logout
         </button>

@@ -116,7 +116,7 @@ function Signup({ fetchNotes }) {
             <div className="text-center text-sm text-gray-600 mt-2">
               Already have an account?{" "}
               <Link
-                to="/login"
+                to="/"
                 className="text-[#1b6d96] hover:text-[#036494] border-b font-medium"
               >
                 Login

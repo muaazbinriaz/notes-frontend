@@ -4,7 +4,7 @@ import Nav from "./components/Nav";
 import NewNotes from "./pages/NewNotes";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -36,15 +36,6 @@ const App = () => {
     fetchNotes();
   }, []);
 
-  useEffect(() => {
-    if (location.state?.message) {
-      toast.success(location.state.message);
-    }
-    if (location.state?.error) {
-      toast.error(location.state.error);
-    }
-  }, [location]);
-
   const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
 
   return (
@@ -64,7 +55,6 @@ const App = () => {
       <Routes>
         <Route index element={<Login fetchNotes={fetchNotes} />} />
         <Route path="/signup" element={<Signup fetchNotes={fetchNotes} />} />
-        <Route path="/login" element={<Login fetchNotes={fetchNotes} />} />
 
         <Route
           path="/NewNotes"
@@ -83,7 +73,7 @@ const App = () => {
           }
         />
 
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   );
