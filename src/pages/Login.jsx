@@ -65,6 +65,7 @@ function Login({ fetchNotes }) {
                 name="email"
                 onChange={handleChange}
                 value={loginInfo.email}
+                autoFocus
                 placeholder="Enter your email..."
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
               />

@@ -101,8 +101,9 @@ const NewNotes = ({ notes, setNotes }) => {
         setNotes(
           notes.map((note) => (note._id === id ? res.data.updatedNote : note))
         );
-        toast.success("Note updated successfully");
-        navigate("/home");
+        toast.success("Note updated successfully", {
+          onClose: () => navigate("/home"),
+        });
       } else {
         toast.error("Note not found");
         navigate("/home");
@@ -124,13 +125,40 @@ const NewNotes = ({ notes, setNotes }) => {
         </div>
       ) : (
         <div>
-          <div className="bg-[#F7F7F7] text-[20px] p-3.5 flex">
+          <div className="bg-[#F7F7F7] text-[20px] p-3.5 flex flex-wrap justify-between px-110 ">
             <Link
-              className="max-w-175 w-full text-[#105273] hover:text-[#437993] duration-300 mx-auto"
+              className=" text-[#105273] hover:text-[#437993] duration-300 "
               to="/home"
             >
               Home
             </Link>
+            <div>
+              {editingNote && (
+                <span className="text-[#105273] text-[17px] ">
+                  Last Edited :{" "}
+                  <span className="">
+                    {(() => {
+                      const timeDiff =
+                        new Date() - new Date(editingNote.updatedAt);
+                      const seconds = Math.floor(timeDiff / 1000);
+                      const minutes = Math.floor(seconds / 60);
+                      const hours = Math.floor(minutes / 60);
+                      const days = Math.floor(hours / 24);
+                      if (seconds < 60) {
+                        return `${seconds} seconds ago`;
+                      }
+                      if (minutes < 60) {
+                        return `${minutes} minutes ago`;
+                      }
+                      if (hours < 24) {
+                        return `${hours} hours ago`;
+                      }
+                      return `${days} days ago`;
+                    })()}{" "}
+                  </span>
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col gap-2.5 mx-auto max-w-175 w-full mt-5 p-5">

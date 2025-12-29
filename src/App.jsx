@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -42,7 +43,7 @@ const App = () => {
     <>
       <ToastContainer
         position="top-right"
-        autoClose={1500}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -73,7 +74,7 @@ const App = () => {
           }
         />
 
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
