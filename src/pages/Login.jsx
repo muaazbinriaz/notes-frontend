@@ -35,7 +35,7 @@ function Login({ fetchNotes }) {
           fetchNotes();
         }
 
-        setTimeout(() => navigate("/home"), 1000);
+        setTimeout(() => navigate("/home"), 200);
       } else {
         toast.error(response.data.message || "Login failed");
       }
@@ -66,7 +66,7 @@ function Login({ fetchNotes }) {
                 onChange={handleChange}
                 value={loginInfo.email}
                 placeholder="Enter your email..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
               />
             </div>
 
@@ -83,13 +83,13 @@ function Login({ fetchNotes }) {
                 onChange={handleChange}
                 value={loginInfo.password}
                 placeholder="Enter your password..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-md transition duration-200"
+              className="w-full bg-[#437993] hover:bg-[#347494] text-white font-semibold py-2 rounded-md transition duration-200"
             >
               Login
             </button>
@@ -98,7 +98,7 @@ function Login({ fetchNotes }) {
               Don't have an account?{" "}
               <Link
                 to="/signup"
-                className="text-purple-600 hover:text-purple-800 border-b font-medium"
+                className="text-[#437993] hover:text-[#036494] border-b font-medium"
               >
                 Signup
               </Link>

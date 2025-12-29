@@ -29,14 +29,14 @@ function Signup({ fetchNotes }) {
       const response = await axios.post(url, { name, email, password });
 
       if (response.data.success) {
-        localStorage.setItem("token", response.data.token); // ✅ save token
+        localStorage.setItem("token", response.data.token);
         toast.success("Signup successful!");
 
         if (typeof fetchNotes === "function") {
           fetchNotes();
         }
 
-        setTimeout(() => navigate("/home"), 1000);
+        setTimeout(() => navigate("/home"), 400);
       } else {
         toast.error(response.data.message || "Signup failed");
       }
@@ -68,7 +68,7 @@ function Signup({ fetchNotes }) {
                 value={signupInfo.name}
                 autoFocus
                 placeholder="Enter your name..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
               />
             </div>
 
@@ -85,7 +85,7 @@ function Signup({ fetchNotes }) {
                 onChange={handleChange}
                 value={signupInfo.email}
                 placeholder="Enter your email..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
               />
             </div>
 
@@ -102,13 +102,13 @@ function Signup({ fetchNotes }) {
                 onChange={handleChange}
                 value={signupInfo.password}
                 placeholder="Enter your password..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-md transition duration-200"
+              className="w-full bg-[#437993] hover:bg-[#347494] text-white font-semibold py-2 rounded-md transition duration-200"
             >
               Signup
             </button>
@@ -117,7 +117,7 @@ function Signup({ fetchNotes }) {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="text-purple-600 hover:text-purple-800 border-b font-medium"
+                className="text-[#1b6d96] hover:text-[#036494] border-b font-medium"
               >
                 Login
               </Link>

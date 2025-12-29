@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 
@@ -30,7 +29,9 @@ const NewNotes = ({ notes, setNotes }) => {
 
   const handleAdd = async () => {
     if (!notesTitle.trim() || !notesBody.trim()) {
-      return toast.error("Both fields are required");
+      return navigate("/home", {
+        state: { error: "Both fields are required" },
+      });
     }
 
     setLoading(true);
@@ -41,11 +42,10 @@ const NewNotes = ({ notes, setNotes }) => {
         { headers: getAuthHeader() }
       );
       setNotes([...notes, response.data]);
-      toast.success("Note added successfully");
-      setTimeout(() => navigate("/home"), 100);
+      navigate("/home", { state: { message: "Note added successfully" } });
     } catch (err) {
-      toast.error("Error adding note");
       console.error(err.response?.data || err.message);
+      navigate("/home", { state: { error: "Error adding note" } });
     } finally {
       setLoading(false);
     }
@@ -69,14 +69,17 @@ const NewNotes = ({ notes, setNotes }) => {
           );
           if (res.data.status === 1) {
             setNotes(notes.filter((note) => note._id !== id));
-            navigate("/home");
-            Swal.fire("Deleted!", "", "success");
+            navigate("/home", {
+              state: { message: "Note deleted successfully" },
+            });
           } else {
-            Swal.fire("Note not found in database", "", "error");
+            navigate("/home", {
+              state: { error: "Note not found in database" },
+            });
           }
         } catch (err) {
-          Swal.fire("Error deleting note", "", "error");
           console.error(err);
+          navigate("/home", { state: { error: "Error deleting note" } });
         }
       } else if (result.isDenied) {
         Swal.fire("Note is not deleted", "", "info");
@@ -97,16 +100,13 @@ const NewNotes = ({ notes, setNotes }) => {
         setNotes(
           notes.map((note) => (note._id === id ? res.data.updatedNote : note))
         );
-        toast.success("Note updated successfully");
-        setTimeout(() => {
-          navigate("/home");
-        }, 100);
+        navigate("/home", { state: { message: "Note updated successfully" } });
       } else {
-        alert("Note not found");
+        navigate("/home", { state: { error: "Note not found" } });
       }
     } catch (err) {
-      alert("Error updating note");
       console.error(err);
+      navigate("/home", { state: { error: "Error updating note" } });
     } finally {
       setLoading(false);
     }

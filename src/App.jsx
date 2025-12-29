@@ -4,9 +4,11 @@ import Nav from "./components/Nav";
 import NewNotes from "./pages/NewNotes";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -34,25 +36,54 @@ const App = () => {
     fetchNotes();
   }, []);
 
+  useEffect(() => {
+    if (location.state?.message) {
+      toast.success(location.state.message);
+    }
+    if (location.state?.error) {
+      toast.error(location.state.error);
+    }
+  }, [location]);
+
   const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       {allowedUrls.includes(path) && <Nav fetchNotes={fetchNotes} />}
       <Routes>
-        <Route index element={<Signup fetchNotes={fetchNotes} />} />
+        <Route index element={<Login fetchNotes={fetchNotes} />} />
         <Route path="/signup" element={<Signup fetchNotes={fetchNotes} />} />
         <Route path="/login" element={<Login fetchNotes={fetchNotes} />} />
+
         <Route
           path="/NewNotes"
-          element={<NewNotes notes={notes} setNotes={setNotes} />}
+          element={
+            <ProtectedRoute>
+              <NewNotes notes={notes} setNotes={setNotes} />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/home"
-          element={<Home notes={notes} loading={loading} />}
+          element={
+            <ProtectedRoute>
+              <Home notes={notes} loading={loading} />
+            </ProtectedRoute>
+          }
         />
-        <Route path="*" element={<Navigate to="/signup" />} />
+
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </>
   );
