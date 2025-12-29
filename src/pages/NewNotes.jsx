@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
+import { ToastContainer, toast } from "react-toastify";
 
 const NewNotes = ({ notes, setNotes }) => {
   const [notesTitle, setNotesTitle] = useState("");
@@ -42,7 +43,8 @@ const NewNotes = ({ notes, setNotes }) => {
         { headers: getAuthHeader() }
       );
       setNotes([...notes, response.data]);
-      localStorage.setItem("noteAdded", "true");
+      navigate("/home");
+      toast.success("Login successful!");
     } catch (err) {
       console.error(err.response?.data || err.message);
       navigate("/home", { state: { error: "Error adding note" } });
