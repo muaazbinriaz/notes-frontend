@@ -116,7 +116,7 @@ const Home = ({ notes, loading }) => {
 
       <div className="fixed bottom-0 m-5 right-0">
         <Link to={"/NewNotes"}>
-          <button className="border text-lg cursor-pointer rounded-lg bg-[#437993] p-5 text-white hover:bg-black duration-500">
+          <button className="border text-lg cursor-pointer rounded-lg bg-[#437993] p-5 text-white hover:bg-[#055f8c] duration-500">
             Create New Note
           </button>
         </Link>

@@ -41,10 +41,9 @@ const NewNotes = ({ notes, setNotes }) => {
         { title: notesTitle, body: notesBody },
         { headers: getAuthHeader() }
       );
+      toast.success("Note added successfully");
       setNotes([...notes, response.data]);
-      toast.success("Note added successfully", {
-        onClose: () => navigate("/home"),
-      });
+      navigate("/home");
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error("Error adding note");
@@ -185,7 +184,7 @@ const NewNotes = ({ notes, setNotes }) => {
             {id === null ? (
               <div>
                 <button
-                  className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-black duration-500 cursor-pointer"
+                  className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-[#055f8c] duration-500 cursor-pointer"
                   onClick={handleAdd}
                 >
                   Add Note
@@ -194,13 +193,13 @@ const NewNotes = ({ notes, setNotes }) => {
             ) : (
               <div className="flex justify-between gap-2">
                 <button
-                  className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-black duration-500 cursor-pointer"
+                  className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-[#055f8c] duration-500 cursor-pointer"
                   onClick={handleRemove}
                 >
                   Remove Note
                 </button>
                 <button
-                  className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-black duration-500 cursor-pointer"
+                  className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-[#055f8c] duration-500 cursor-pointer"
                   onClick={handleEdit}
                 >
                   Update Note
