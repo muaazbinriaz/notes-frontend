@@ -205,7 +205,7 @@ const NewNotes = ({ notes, setNotes }) => {
               <input
                 type="text"
                 placeholder="Type your Notes title"
-                className="bg-[#F7F7F7] py-5.5 px-3 text-[18px] rounded max-w-175 w-full "
+                className="bg-[#F7F7F7] py-5.5  px-3 text-[18px] rounded max-w-175 w-full focus:outline-gray-300"
                 onChange={onTitleTextChange}
                 value={notesTitle}
                 maxLength={titleLimit}
@@ -219,7 +219,7 @@ const NewNotes = ({ notes, setNotes }) => {
               <textarea
                 placeholder="Type your Notes body"
                 rows={4}
-                className="bg-[#F7F7F7] py-5.5 px-3 resize-none text-[18px] rounded max-w-175 w-full"
+                className="bg-[#F7F7F7] py-5.5 px-3 resize-none text-[18px] rounded max-w-175 w-full  focus:outline-gray-300"
                 onChange={onBodyTextChange}
                 value={notesBody}
                 maxLength={bodyLimit}

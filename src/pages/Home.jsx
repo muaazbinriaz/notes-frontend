@@ -125,12 +125,12 @@ const Home = ({ loading }) => {
         {sortedNotes.map((note) => (
           <div
             key={note._id}
-            className="p-3 flex flex-col gap-2.5 bg-[#F7F7F7] cursor-pointer wrap-break-word"
+            className="p-3 flex flex-col gap-2.5 bg-[#F7F7F7] text-[#160101fb] cursor-pointer wrap-break-word"
             onClick={() => navigate(`/NewNotes?id=${note._id}`)}
           >
             <h3 className="font-medium">{note.title}</h3>
             <PromptClamp text={note.body} />
-            <span>
+            <span className="text-right text-[#437993]">
               Last Edited :{" "}
               {(() => {
                 const timeDiff = new Date() - new Date(note.updatedAt);
