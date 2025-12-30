@@ -1,12 +1,48 @@
 import { Link, useNavigate } from "react-router-dom";
 import PromptClamp from "../components/PromptClamp";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import axios from "axios";
 
-const Home = ({ notes, loading }) => {
+const Home = ({ loading }) => {
   const navigate = useNavigate();
+  const [notes, setNotes] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
   const [sortBy, setSortBy] = useState("sort by");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalNotes, setTotalNotes] = useState({
+    totalNotes: 0,
+    totalPages: 0,
+    currentPage: 1,
+  });
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/website/notes/getNotes?page=${page}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setNotes(res.data.data);
+        setTotalNotes({
+          totalNotes: res.data.totalNotes,
+          totalPages: Math.ceil(res.data.totalNotes / limit),
+          currentPage: page,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchNotes();
+  }, [page, limit]);
 
   if (loading) {
     return (
@@ -80,7 +116,6 @@ const Home = ({ notes, loading }) => {
               <option value="alphabet">Alphabet</option>
               <option value="lastEdited">Last Edited</option>
             </select>
-
             <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[#1f5672] group-hover:text-white transition duration-300" />
           </div>
         </div>
@@ -112,6 +147,28 @@ const Home = ({ notes, loading }) => {
           </div>
         ))}
       </div>
+
+      {totalNotes.totalPages > 1 && (
+        <div className="flex justify-center gap-4 mt-5">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="px-4 py-2 bg-[#437993] text-white rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+          <span>
+            Page {page} of {totalNotes.totalPages}
+          </span>
+          <button
+            disabled={page === totalNotes.totalPages}
+            onClick={() => setPage(page + 1)}
+            className="px-4 py-2 bg-[#437993] text-white rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       <div className="fixed bottom-0 m-5 right-0">
         <Link to={"/NewNotes"}>

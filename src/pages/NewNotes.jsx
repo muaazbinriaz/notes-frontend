@@ -6,13 +6,20 @@ import "sweetalert2/src/sweetalert2.scss";
 import { toast } from "react-toastify";
 
 const NewNotes = ({ notes, setNotes }) => {
+  const titleLimit = 100;
+  const bodyLimit = 1000;
+
+  const [titleCount, setTitleCount] = useState(0);
+  const [bodyCount, setBodyCount] = useState(0);
+  const [isTitleLimit, setIsTitleLimit] = useState(false);
+  const [isBodyLimit, setIsBodyLimit] = useState(false);
+
   const [notesTitle, setNotesTitle] = useState("");
   const [notesBody, setNotesBody] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const id = searchParams.get("id");
 
   const editingNote = notes.find((note) => note._id === id);
@@ -21,6 +28,8 @@ const NewNotes = ({ notes, setNotes }) => {
     if (id && editingNote) {
       setNotesTitle(editingNote.title);
       setNotesBody(editingNote.body);
+      setTitleCount(editingNote.title.length);
+      setBodyCount(editingNote.body.length);
     }
   }, [editingNote, id]);
 
@@ -37,9 +46,28 @@ const NewNotes = ({ notes, setNotes }) => {
     );
   }
 
+  const onTitleTextChange = (e) => {
+    const count = e.target.value.length;
+    setTitleCount(count);
+    setIsTitleLimit(count > titleLimit);
+    setNotesTitle(e.target.value);
+  };
+
+  const onBodyTextChange = (e) => {
+    const count = e.target.value.length;
+    setBodyCount(count);
+    setIsBodyLimit(count > bodyLimit);
+    setNotesBody(e.target.value);
+  };
+
   const handleAdd = async () => {
-    if (!notesTitle.trim() || !notesBody.trim()) {
-      toast.error("Both fields are required");
+    if (!notesTitle.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+
+    if (!notesBody.trim()) {
+      toast.error("Body is required");
       return;
     }
 
@@ -99,6 +127,16 @@ const NewNotes = ({ notes, setNotes }) => {
   };
 
   const handleEdit = async () => {
+    if (!notesTitle.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+
+    if (!notesBody.trim()) {
+      toast.error("Body is required");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await axios.put(
@@ -163,26 +201,39 @@ const NewNotes = ({ notes, setNotes }) => {
           </div>
 
           <div className="flex flex-col gap-2.5 mx-auto max-w-175 w-full mt-5 p-5">
-            <input
-              type="text"
-              placeholder="Type your Notes title"
-              className="bg-[#F7F7F7] py-2.5 px-3 text-[18px] rounded max-w-175 w-full"
-              onChange={(e) => setNotesTitle(e.target.value)}
-              value={notesTitle}
-            />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Type your Notes title"
+                className="bg-[#F7F7F7] py-5.5 px-3 text-[18px] rounded max-w-175 w-full "
+                onChange={onTitleTextChange}
+                value={notesTitle}
+                maxLength={titleLimit}
+              />
+              <span className="absolute bottom-1 right-2 text-[15px] text-[#105273]">
+                {titleCount} / {titleLimit}
+              </span>
+            </div>
 
-            <textarea
-              placeholder="Type your Notes body"
-              rows={4}
-              className="bg-[#F7F7F7] py-2.5 px-3 resize-none text-[18px] rounded max-w-175 w-full"
-              onChange={(e) => setNotesBody(e.target.value)}
-              value={notesBody}
-            />
+            <div className="relative">
+              <textarea
+                placeholder="Type your Notes body"
+                rows={4}
+                className="bg-[#F7F7F7] py-5.5 px-3 resize-none text-[18px] rounded max-w-175 w-full"
+                onChange={onBodyTextChange}
+                value={notesBody}
+                maxLength={bodyLimit}
+              />
+              <span className="absolute bottom-2 right-4 text-[15px] text-[#105273]">
+                {bodyCount} / {bodyLimit}
+              </span>
+            </div>
 
             {id === null ? (
               <button
                 className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-[#055f8c] duration-500 cursor-pointer"
-                onClick={handleAdd}
+                onClick={() => !(isTitleLimit || isBodyLimit) && handleAdd()}
+                disabled={isTitleLimit || isBodyLimit}
               >
                 Add Note
               </button>
@@ -197,6 +248,7 @@ const NewNotes = ({ notes, setNotes }) => {
                 <button
                   className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-[#055f8c] duration-500 cursor-pointer"
                   onClick={handleEdit}
+                  disabled={isTitleLimit || isBodyLimit}
                 >
                   Update Note
                 </button>
