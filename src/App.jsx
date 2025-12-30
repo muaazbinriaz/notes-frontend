@@ -29,9 +29,11 @@ const App = () => {
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setNotes(res.data);
+
+      setNotes(res.data.data || []);
     } catch (err) {
       console.error(err);
+      setNotes([]);
     } finally {
       setLoading(false);
     }

@@ -7,6 +7,7 @@ const Home = ({ notes, loading }) => {
   const navigate = useNavigate();
   const [searchFilter, setSearchFilter] = useState("");
   const [sortBy, setSortBy] = useState("sort by");
+
   if (loading) {
     return (
       <div className="flex max-w-175 w-full mx-auto mt-28 p-5">
@@ -17,12 +18,13 @@ const Home = ({ notes, loading }) => {
     );
   }
 
-  const filteredNotes = notes.filter((note) => {
-    return (
-      note.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
-      note.body.toLowerCase().includes(searchFilter.toLowerCase())
-    );
-  });
+  const filteredNotes = Array.isArray(notes)
+    ? notes.filter(
+        (note) =>
+          note.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
+          note.body.toLowerCase().includes(searchFilter.toLowerCase())
+      )
+    : [];
 
   const sortedNotes = [...filteredNotes].sort((a, b) => {
     if (sortBy === "alphabet") {
@@ -34,7 +36,7 @@ const Home = ({ notes, loading }) => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  if (notes.length === 0) {
+  if (!Array.isArray(notes) || notes.length === 0) {
     return (
       <>
         <div className="flex max-w-175 w-full mx-auto mt-28 p-5">
@@ -80,6 +82,7 @@ const Home = ({ notes, loading }) => {
           </div>
         </div>
       </div>
+
       <div className="max-w-175 py-3 px-3 mx-auto mt-4 flex flex-col gap-2">
         {sortedNotes.map((note) => (
           <div
@@ -90,7 +93,6 @@ const Home = ({ notes, loading }) => {
             <h3 className="font-medium">{note.title}</h3>
             <PromptClamp text={note.body} />
             <span>
-              {" "}
               Last Edited :{" "}
               {(() => {
                 const timeDiff = new Date() - new Date(note.updatedAt);
@@ -98,17 +100,11 @@ const Home = ({ notes, loading }) => {
                 const minutes = Math.floor(seconds / 60);
                 const hours = Math.floor(minutes / 60);
                 const days = Math.floor(hours / 24);
-                if (seconds < 60) {
-                  return `${seconds} seconds ago`;
-                }
-                if (minutes < 60) {
-                  return `${minutes} minutes ago`;
-                }
-                if (hours < 24) {
-                  return `${hours} hours ago`;
-                }
+                if (seconds < 60) return `${seconds} seconds ago`;
+                if (minutes < 60) return `${minutes} minutes ago`;
+                if (hours < 24) return `${hours} hours ago`;
                 return `${days} days ago`;
-              })()}{" "}
+              })()}
             </span>
           </div>
         ))}
