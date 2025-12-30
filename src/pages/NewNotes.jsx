@@ -41,13 +41,16 @@ const NewNotes = ({ notes, setNotes }) => {
         { title: notesTitle, body: notesBody },
         { headers: getAuthHeader() }
       );
-      toast.success("Note added successfully");
       setNotes([...notes, response.data]);
-      navigate("/home");
+      toast.success("Note added successfully");
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 800);
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error("Error adding note");
-      navigate("/home");
+      setTimeout(() => navigate("/home"), 800);
     } finally {
       setLoading(false);
     }
@@ -71,15 +74,15 @@ const NewNotes = ({ notes, setNotes }) => {
           if (res.data.status === 1) {
             setNotes(notes.filter((note) => note._id !== id));
             toast.success("Note deleted successfully");
-            navigate("/home");
+            setTimeout(() => navigate("/home"), 800);
           } else {
             toast.error("Note not found in database");
-            navigate("/home");
+            setTimeout(() => navigate("/home"), 800);
           }
         } catch (err) {
           console.error(err);
           toast.error("Error deleting note");
-          navigate("/home");
+          setTimeout(() => navigate("/home"), 800);
         }
       } else if (result.isDenied) {
         Swal.fire("Note is not deleted", "", "info");
@@ -100,17 +103,16 @@ const NewNotes = ({ notes, setNotes }) => {
         setNotes(
           notes.map((note) => (note._id === id ? res.data.updatedNote : note))
         );
-        toast.success("Note updated successfully", {
-          onClose: () => navigate("/home"),
-        });
+        toast.success("Note updated successfully");
+        setTimeout(() => navigate("/home"), 800);
       } else {
         toast.error("Note not found");
-        navigate("/home");
+        setTimeout(() => navigate("/home"), 800);
       }
     } catch (err) {
       console.error(err);
       toast.error("Error updating note");
-      navigate("/home");
+      setTimeout(() => navigate("/home"), 800);
     } finally {
       setLoading(false);
     }

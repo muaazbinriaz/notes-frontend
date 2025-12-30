@@ -125,7 +125,6 @@ function Signup({ fetchNotes }) {
           </form>
         </div>
       </div>
-      <ToastContainer />
     </>
   );
 }

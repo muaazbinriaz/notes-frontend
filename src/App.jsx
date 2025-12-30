@@ -17,20 +17,24 @@ const App = () => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
 
-  const fetchNotes = () => {
+  const fetchNotes = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       setNotes([]);
       return;
     }
     setLoading(true);
-    axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setNotes(res.data))
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setNotes(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -107,7 +107,6 @@ function Login({ fetchNotes }) {
           </form>
         </div>
       </div>
-      <ToastContainer />
     </>
   );
 }
