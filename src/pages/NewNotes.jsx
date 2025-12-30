@@ -14,7 +14,8 @@ const NewNotes = ({ notes, setNotes }) => {
   const [searchParams] = useSearchParams();
 
   const id = searchParams.get("id");
-  const editingNote = notes.find((note) => note._id == id);
+
+  const editingNote = notes.find((note) => note._id === id);
 
   useEffect(() => {
     if (id && editingNote) {
@@ -27,6 +28,14 @@ const NewNotes = ({ notes, setNotes }) => {
     const token = localStorage.getItem("token");
     return { Authorization: `Bearer ${token}` };
   };
+
+  if (id && !editingNote) {
+    return (
+      <div className="flex items-center justify-center h-screen text-lg">
+        Loading note...
+      </div>
+    );
+  }
 
   const handleAdd = async () => {
     if (!notesTitle.trim() || !notesBody.trim()) {
@@ -41,16 +50,16 @@ const NewNotes = ({ notes, setNotes }) => {
         { title: notesTitle, body: notesBody },
         { headers: getAuthHeader() }
       );
-      setNotes([...notes, response.data]);
-      toast.success("Note added successfully");
 
-      setTimeout(() => {
+      if (response.data.success) {
+        setNotes([...notes, response.data.data]);
+        toast.success("Note added successfully");
         navigate("/home");
-      }, 800);
+      }
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error("Error adding note");
-      setTimeout(() => navigate("/home"), 800);
+      navigate("/home");
     } finally {
       setLoading(false);
     }
@@ -71,21 +80,20 @@ const NewNotes = ({ notes, setNotes }) => {
             }/api/website/notes/deleteNote/${id}`,
             { headers: getAuthHeader() }
           );
-          if (res.data.status === 1) {
+
+          if (res.data.success) {
             setNotes(notes.filter((note) => note._id !== id));
             toast.success("Note deleted successfully");
-            setTimeout(() => navigate("/home"), 800);
+            navigate("/home");
           } else {
             toast.error("Note not found in database");
-            setTimeout(() => navigate("/home"), 800);
+            navigate("/home");
           }
         } catch (err) {
           console.error(err);
           toast.error("Error deleting note");
-          setTimeout(() => navigate("/home"), 800);
+          navigate("/home");
         }
-      } else if (result.isDenied) {
-        Swal.fire("Note is not deleted", "", "info");
       }
     });
   };
@@ -99,20 +107,18 @@ const NewNotes = ({ notes, setNotes }) => {
         { headers: getAuthHeader() }
       );
 
-      if (res.data.status === 1) {
-        setNotes(
-          notes.map((note) => (note._id === id ? res.data.updatedNote : note))
-        );
+      if (res.data.success) {
+        setNotes(notes.map((note) => (note._id === id ? res.data.data : note)));
         toast.success("Note updated successfully");
-        setTimeout(() => navigate("/home"), 800);
+        navigate("/home");
       } else {
         toast.error("Note not found");
-        setTimeout(() => navigate("/home"), 800);
+        navigate("/home");
       }
     } catch (err) {
       console.error(err);
       toast.error("Error updating note");
-      setTimeout(() => navigate("/home"), 800);
+      navigate("/home");
     } finally {
       setLoading(false);
     }
@@ -137,7 +143,7 @@ const NewNotes = ({ notes, setNotes }) => {
               {editingNote && (
                 <span className="text-[#105273] text-[17px] ">
                   Last Edited :{" "}
-                  <span className="">
+                  <span>
                     {(() => {
                       const timeDiff =
                         new Date() - new Date(editingNote.updatedAt);
@@ -145,17 +151,11 @@ const NewNotes = ({ notes, setNotes }) => {
                       const minutes = Math.floor(seconds / 60);
                       const hours = Math.floor(minutes / 60);
                       const days = Math.floor(hours / 24);
-                      if (seconds < 60) {
-                        return `${seconds} seconds ago`;
-                      }
-                      if (minutes < 60) {
-                        return `${minutes} minutes ago`;
-                      }
-                      if (hours < 24) {
-                        return `${hours} hours ago`;
-                      }
+                      if (seconds < 60) return `${seconds} seconds ago`;
+                      if (minutes < 60) return `${minutes} minutes ago`;
+                      if (hours < 24) return `${hours} hours ago`;
                       return `${days} days ago`;
-                    })()}{" "}
+                    })()}
                   </span>
                 </span>
               )}
@@ -163,35 +163,29 @@ const NewNotes = ({ notes, setNotes }) => {
           </div>
 
           <div className="flex flex-col gap-2.5 mx-auto max-w-175 w-full mt-5 p-5">
-            <div>
-              <input
-                type="text"
-                placeholder="Type your Notes title"
-                className="bg-[#F7F7F7] py-2.5 px-3 text-[18px] rounded max-w-175 w-full"
-                onChange={(e) => setNotesTitle(e.target.value)}
-                value={notesTitle}
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Type your Notes title"
+              className="bg-[#F7F7F7] py-2.5 px-3 text-[18px] rounded max-w-175 w-full"
+              onChange={(e) => setNotesTitle(e.target.value)}
+              value={notesTitle}
+            />
 
-            <div>
-              <textarea
-                placeholder="Type your Notes body"
-                rows={4}
-                className="bg-[#F7F7F7] py-2.5 px-3 resize-none text-[18px] rounded max-w-175 w-full"
-                onChange={(e) => setNotesBody(e.target.value)}
-                value={notesBody}
-              ></textarea>
-            </div>
+            <textarea
+              placeholder="Type your Notes body"
+              rows={4}
+              className="bg-[#F7F7F7] py-2.5 px-3 resize-none text-[18px] rounded max-w-175 w-full"
+              onChange={(e) => setNotesBody(e.target.value)}
+              value={notesBody}
+            />
 
             {id === null ? (
-              <div>
-                <button
-                  className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-[#055f8c] duration-500 cursor-pointer"
-                  onClick={handleAdd}
-                >
-                  Add Note
-                </button>
-              </div>
+              <button
+                className="border rounded-md bg-[#437993] p-2.5 text-white hover:bg-[#055f8c] duration-500 cursor-pointer"
+                onClick={handleAdd}
+              >
+                Add Note
+              </button>
             ) : (
               <div className="flex justify-between gap-2">
                 <button
