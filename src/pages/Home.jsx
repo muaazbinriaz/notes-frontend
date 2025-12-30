@@ -19,11 +19,14 @@ const Home = ({ notes, loading }) => {
   }
 
   const filteredNotes = Array.isArray(notes)
-    ? notes.filter(
-        (note) =>
-          note.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
-          note.body.toLowerCase().includes(searchFilter.toLowerCase())
-      )
+    ? notes.filter((note) => {
+        const title = note?.title || "";
+        const body = note?.body || "";
+        return (
+          title.toLowerCase().includes(searchFilter.toLowerCase()) ||
+          body.toLowerCase().includes(searchFilter.toLowerCase())
+        );
+      })
     : [];
 
   const sortedNotes = [...filteredNotes].sort((a, b) => {
