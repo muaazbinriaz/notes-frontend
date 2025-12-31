@@ -43,8 +43,6 @@ function Login() {
     } catch (err) {
       console.error("Login error:", err);
       toast.error(err.response?.data?.message || "Server error during login");
-    } finally {
-      setLoading(false);
     }
   };
 

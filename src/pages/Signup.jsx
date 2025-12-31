@@ -44,8 +44,6 @@ function Signup() {
     } catch (err) {
       console.error("Signup error:", err);
       toast.error(err.response?.data?.message || "Server error during signup");
-    } finally {
-      setLoading(false);
     }
   };
 
