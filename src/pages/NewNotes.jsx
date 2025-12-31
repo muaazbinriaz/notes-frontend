@@ -36,7 +36,7 @@ const NewNotes = () => {
           `${
             import.meta.env.VITE_BASE_URL
           }/api/website/notes/getNoteById/${id}`,
-          { headers: getAuthHeader() }
+          getAuthHeader()
         );
         const note = response.data.data;
         setEditingNote(note);
@@ -93,7 +93,7 @@ const NewNotes = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/insert`,
         { title: notesTitle, body: notesBody },
-        { headers: getAuthHeader() }
+        getAuthHeader()
       );
 
       if (response.data.success) {
@@ -122,7 +122,7 @@ const NewNotes = () => {
             `${
               import.meta.env.VITE_BASE_URL
             }/api/website/notes/deleteNote/${id}`,
-            { headers: getAuthHeader() }
+            getAuthHeader()
           );
 
           if (res.data.success) {
@@ -157,7 +157,7 @@ const NewNotes = () => {
       const res = await axios.put(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/updateNote/${id}`,
         { title: notesTitle, body: notesBody },
-        { headers: getAuthHeader() }
+        getAuthHeader()
       );
 
       if (res.data.success) {
