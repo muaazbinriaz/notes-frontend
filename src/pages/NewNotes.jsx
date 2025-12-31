@@ -5,6 +5,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 import { toast } from "react-toastify";
 import RoundedLoader from "../components/RoundedLoader";
+import { getAuthHeader } from "../utils/helper";
 
 const NewNotes = () => {
   const titleLimit = 100;
@@ -24,11 +25,6 @@ const NewNotes = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const [editingNote, setEditingNote] = useState(null);
-
-  const getAuthHeader = () => {
-    const token = localStorage.getItem("token");
-    return { Authorization: `Bearer ${token}` };
-  };
 
   useEffect(() => {
     if (!id) return;

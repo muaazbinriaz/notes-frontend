@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import axios from "axios";
 import RoundedLoader from "../components/RoundedLoader";
+import { getAuthHeader } from "../utils/helper";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -23,16 +24,11 @@ const Home = () => {
     const fetchNotes = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
         const res = await axios.get(
           `${
             import.meta.env.VITE_BASE_URL
           }/api/website/notes/getNotes?page=${page}&limit=${limit}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          getAuthHeader()
         );
         setNotes(res.data.data);
         setTotalNotes({
