@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import UseAuthenticated from "../components/UseAuthenticated";
+import RoundedLoader from "../components/RoundedLoader";
 
 function Signup() {
   UseAuthenticated();
@@ -51,9 +52,7 @@ function Signup() {
   return (
     <>
       {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <span className="border-blue-500 h-16 w-16 animate-spin rounded-full border-t-4"></span>
-        </div>
+        <RoundedLoader />
       ) : (
         <div className="flex items-center justify-center mt-20">
           <div className="w-full max-w-md bg-gray-100 p-6 rounded-md shadow-md">

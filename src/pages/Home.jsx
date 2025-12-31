@@ -3,6 +3,7 @@ import PromptClamp from "../components/PromptClamp";
 import { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import axios from "axios";
+import RoundedLoader from "../components/RoundedLoader";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -70,11 +71,7 @@ const Home = () => {
   });
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <span className="border-blue-500 h-16 w-16 animate-spin rounded-full border-t-4"></span>
-      </div>
-    );
+    return <RoundedLoader />;
   }
 
   if (!Array.isArray(notes) || notes.length === 0) {

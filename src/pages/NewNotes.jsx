@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 import { toast } from "react-toastify";
+import RoundedLoader from "../components/RoundedLoader";
 
 const NewNotes = () => {
   const titleLimit = 100;
@@ -181,9 +182,7 @@ const NewNotes = () => {
   return (
     <>
       {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <span className="border-blue-500 h-16 w-16 animate-spin rounded-full border-t-4"></span>
-        </div>
+        <RoundedLoader />
       ) : (
         <div>
           <div className="bg-[#F7F7F7] text-[20px] p-3.5 flex flex-wrap justify-between px-10 md:px-34 lg:px-52 xl:px-110 max-w-390 w-full mx-auto">
