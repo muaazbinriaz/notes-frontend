@@ -100,7 +100,7 @@ const Home = () => {
             onChange={(e) => setSearchFilter(e.target.value)}
             value={searchFilter}
           />
-          <div className="relative w-full max-w-50 group">
+          <div className="relative w-full max-w-50 ">
             <select
               className="px-3 py-2 w-full bg-[#fafafa] rounded-lg cursor-pointer border border-[#437993] text-[#1f5672] appearance-none focus:outline-none focus:ring-1 focus:ring-[#437993] transition duration-300"
               onChange={(e) => setSortBy(e.target.value)}
@@ -111,7 +111,7 @@ const Home = () => {
               <option value="alphabet">Alphabet</option>
               <option value="lastEdited">Last Edited</option>
             </select>
-            <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[#1f5672] group-hover:text-white transition duration-300" />
+            <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-[#1f5672]  transition duration-300" />
           </div>
         </div>
       </div>
