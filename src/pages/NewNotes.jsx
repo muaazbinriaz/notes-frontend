@@ -91,7 +91,7 @@ const NewNotes = () => {
       toast.error("Body is required");
       return;
     }
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/insert`,
