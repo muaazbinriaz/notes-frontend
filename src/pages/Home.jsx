@@ -102,7 +102,7 @@ const Home = () => {
           />
           <div className="relative w-full max-w-50 group">
             <select
-              className="px-3 py-2 w-full bg-[#fafafa] rounded-lg cursor-pointer border border-[#437993] text-[#1f5672] appearance-none focus:outline-none focus:ring-1 focus:ring-[#437993] hover:bg-[#437993] hover:text-white transition duration-300"
+              className="px-3 py-2 w-full bg-[#fafafa] rounded-lg cursor-pointer border border-[#437993] text-[#1f5672] appearance-none focus:outline-none focus:ring-1 focus:ring-[#437993] hover:text-white transition duration-300"
               onChange={(e) => setSortBy(e.target.value)}
               value={sortBy}
             >
