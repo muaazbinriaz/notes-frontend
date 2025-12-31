@@ -1,47 +1,18 @@
 import Home from "./pages/Home";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Nav from "./components/Nav";
 import NewNotes from "./pages/NewNotes";
-import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Signup from "./pages/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
-  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const path = location.pathname.split("/")[1];
-
-  const fetchNotes = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setNotes([]);
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setNotes(res.data.data || []);
-    } catch (err) {
-      console.error(err);
-      setNotes([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
 
   const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
 
@@ -58,16 +29,16 @@ const App = () => {
         pauseOnHover
       />
 
-      {allowedUrls.includes(path) && <Nav fetchNotes={fetchNotes} />}
+      {allowedUrls.includes(path) && <Nav />}
       <Routes>
-        <Route index element={<Login fetchNotes={fetchNotes} />} />
-        <Route path="/signup" element={<Signup fetchNotes={fetchNotes} />} />
+        <Route index element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         <Route
           path="/NewNotes"
           element={
             <ProtectedRoute>
-              <NewNotes notes={notes} setNotes={setNotes} />
+              <NewNotes />
             </ProtectedRoute>
           }
         />
@@ -75,7 +46,7 @@ const App = () => {
           path="/home"
           element={
             <ProtectedRoute>
-              <Home notes={notes} loading={loading} />
+              <Home />
             </ProtectedRoute>
           }
         />

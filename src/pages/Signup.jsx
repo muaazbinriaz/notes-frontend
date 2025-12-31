@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import UseAuthenticated from "../components/UseAuthenticated";
 
-function Signup({ fetchNotes }) {
+function Signup() {
+  UseAuthenticated();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [signupInfo, setSignupInfo] = useState({
@@ -33,10 +35,6 @@ function Signup({ fetchNotes }) {
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         toast.success("Signup successful!");
-
-        if (typeof fetchNotes === "function") {
-          fetchNotes();
-        }
 
         setTimeout(() => navigate("/home"), 400);
       } else {

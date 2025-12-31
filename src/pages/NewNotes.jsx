@@ -5,10 +5,11 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 import { toast } from "react-toastify";
 
-const NewNotes = ({ notes, setNotes }) => {
+const NewNotes = () => {
   const titleLimit = 100;
   const bodyLimit = 1000;
 
+  const [notes, setNotes] = useState([]);
   const [titleCount, setTitleCount] = useState(0);
   const [bodyCount, setBodyCount] = useState(0);
   const [isTitleLimit, setIsTitleLimit] = useState(false);
@@ -21,8 +22,41 @@ const NewNotes = ({ notes, setNotes }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
+  const [editingNote, setEditingNote] = useState(null);
 
-  const editingNote = notes.find((note) => note._id === id);
+  const getAuthHeader = () => {
+    const token = localStorage.getItem("token");
+    return { Authorization: `Bearer ${token}` };
+  };
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchNote = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/website/notes/getNoteById/${id}`,
+          { headers: getAuthHeader() }
+        );
+        const note = response.data.data;
+        setEditingNote(note);
+        setNotesTitle(note.title);
+        setNotesBody(note.body);
+        setTitleCount(note.title.length);
+        setBodyCount(note.body.length);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to fetch note");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNote();
+  }, [id]);
 
   useEffect(() => {
     if (id && editingNote) {
@@ -32,19 +66,6 @@ const NewNotes = ({ notes, setNotes }) => {
       setBodyCount(editingNote.body.length);
     }
   }, [editingNote, id]);
-
-  const getAuthHeader = () => {
-    const token = localStorage.getItem("token");
-    return { Authorization: `Bearer ${token}` };
-  };
-
-  if (id && !editingNote) {
-    return (
-      <div className="flex items-center justify-center h-screen text-lg">
-        Loading note...
-      </div>
-    );
-  }
 
   const onTitleTextChange = (e) => {
     const count = e.target.value.length;
@@ -71,7 +92,6 @@ const NewNotes = ({ notes, setNotes }) => {
       return;
     }
 
-    setLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/insert`,
@@ -88,8 +108,6 @@ const NewNotes = ({ notes, setNotes }) => {
       console.error(err.response?.data || err.message);
       toast.error("Error adding note");
       navigate("/home");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -101,6 +119,7 @@ const NewNotes = ({ notes, setNotes }) => {
       confirmButtonColor: "red",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setLoading(true);
         try {
           const res = await axios.delete(
             `${
@@ -136,7 +155,6 @@ const NewNotes = ({ notes, setNotes }) => {
       toast.error("Body is required");
       return;
     }
-
     setLoading(true);
     try {
       const res = await axios.put(
@@ -157,8 +175,6 @@ const NewNotes = ({ notes, setNotes }) => {
       console.error(err);
       toast.error("Error updating note");
       navigate("/home");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -170,9 +186,9 @@ const NewNotes = ({ notes, setNotes }) => {
         </div>
       ) : (
         <div>
-          <div className="bg-[#F7F7F7] text-[20px] p-3.5 flex flex-wrap justify-between px-110 ">
+          <div className="bg-[#F7F7F7] text-[20px] p-3.5 flex flex-wrap justify-between px-10 md:px-34 lg:px-52 xl:px-110 max-w-390 w-full mx-auto">
             <Link
-              className=" text-[#105273] hover:text-[#437993] duration-300 "
+              className=" text-[#105273] hover:text-[#437993] duration-300"
               to="/home"
             >
               Home

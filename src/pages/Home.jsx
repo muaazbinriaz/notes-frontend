@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import axios from "axios";
 
-const Home = ({ loading }) => {
+const Home = () => {
   const navigate = useNavigate();
   const [notes, setNotes] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
   const [sortBy, setSortBy] = useState("sort by");
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalNotes, setTotalNotes] = useState({
@@ -19,6 +20,7 @@ const Home = ({ loading }) => {
 
   useEffect(() => {
     const fetchNotes = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
@@ -39,20 +41,12 @@ const Home = ({ loading }) => {
         });
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchNotes();
   }, [page, limit]);
-
-  if (loading) {
-    return (
-      <div className="flex max-w-175 w-full mx-auto mt-28 p-5">
-        <p className="bg-[#fafafa] py-4.5 text-center text-[21px] font-medium text-[#1f5672] rounded max-w-175 w-full">
-          Loading notes...
-        </p>
-      </div>
-    );
-  }
 
   const filteredNotes = Array.isArray(notes)
     ? notes.filter((note) => {
@@ -74,6 +68,14 @@ const Home = ({ loading }) => {
     }
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="border-blue-500 h-16 w-16 animate-spin rounded-full border-t-4"></span>
+      </div>
+    );
+  }
 
   if (!Array.isArray(notes) || notes.length === 0) {
     return (

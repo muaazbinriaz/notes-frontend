@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 
-const Nav = ({ fetchNotes }) => {
+const Nav = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    if (typeof fetchNotes === "function") {
-      fetchNotes();
-    }
+    // if (typeof fetchNotes === "function") {
+    //   fetchNotes();
+    // }
     navigate("/");
   };
 
