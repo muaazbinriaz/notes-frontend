@@ -1,18 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import useAuthenticated from "../customHooks/UseAuthenticated";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const Nav = () => {
   const navigate = useNavigate();
+  const dropDown = useRef(null);
   const [open, setOpen] = useState(false);
   const { token, user } = useAuthenticated();
   const firstLetter = user?.name ? user.name.charAt(0).toUpperCase() : "?";
+
+  const closeDropdown = (e) => {
+    if (dropDown.current && !dropDown.current.contains(e.target)) {
+      setOpen(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.clear();
     setOpen(false);
     navigate("/");
   };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", closeDropdown);
+  }, []);
 
   return (
     <div className="bg-[#437993] text-white flex justify-between items-center px-10 py-3">
@@ -29,7 +40,10 @@ const Nav = () => {
             {firstLetter}
           </button>
           {open && (
-            <div className="absolute right-0 mt-2 w-65 bg-white border  border-gray-200 rounded-md shadow-md">
+            <div
+              ref={dropDown}
+              className="absolute right-0 mt-2 w-65 bg-white border border-gray-200 rounded-md shadow-md"
+            >
               <div className="p-4">
                 <p className="text-gray-700">{user?.name}</p>
                 <p className="text-gray-500">{user?.email}</p>
