@@ -10,6 +10,8 @@ const useAuthenticated = () => {
   useEffect(() => {
     if (!auth?.token) {
       navigate("/");
+    } else {
+      navigate("/home");
     }
   }, [auth?.token, navigate]);
 
