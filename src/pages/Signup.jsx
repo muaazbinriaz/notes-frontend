@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import UseAuthenticated from "../customHooks/UseAuthenticated";
+
 import RoundedLoader from "../components/RoundedLoader";
 
 function Signup() {
-  UseAuthenticated();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [signupInfo, setSignupInfo] = useState({
