@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import UseAuthenticated from "../components/UseAuthenticated";
+import UseAuthenticated from "../customHooks/UseAuthenticated";
 import RoundedLoader from "../components/RoundedLoader";
 
 function Signup() {
@@ -34,7 +34,17 @@ function Signup() {
       const response = await axios.post(url, { name, email, password });
 
       if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            token: response.data.token,
+            user: {
+              _id: response.data._id,
+              name: response.data.name,
+              email: response.data.email,
+            },
+          })
+        );
         toast.success("Signup successful!");
 
         setTimeout(() => navigate("/home"), 400);

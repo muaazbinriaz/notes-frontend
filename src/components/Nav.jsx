@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import useAuthenticated from "../customHooks/UseAuthenticated";
+import { useState } from "react";
 
 const Nav = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const [open, setOpen] = useState(false);
+  const { token, user } = useAuthenticated();
+  const firstLetter = user?.name ? user.name.charAt(0).toUpperCase() : "?";
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    // if (typeof fetchNotes === "function") {
-    //   fetchNotes();
-    // }
+    localStorage.clear();
+    setOpen(false);
     navigate("/");
   };
 
@@ -19,12 +21,28 @@ const Nav = () => {
         <p className="text-[17px]">Take Notes and never forget</p>
       </div>
       {token && (
-        <button
-          onClick={handleLogout}
-          className="bg-blue-600 hover:bg-blue-500 transition duration-300 text-white px-4 py-2 rounded-md"
-        >
-          Logout
-        </button>
+        <div>
+          <button
+            onClick={() => setOpen(!open)}
+            className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center"
+          >
+            {firstLetter}
+          </button>
+          {open && (
+            <div className="absolute right-0 mt-2 w-65 bg-white border  border-gray-200 rounded-md shadow-md">
+              <div className="p-4">
+                <p className="text-gray-700">{user?.name}</p>
+                <p className="text-gray-500">{user?.email}</p>
+                <button
+                  onClick={handleLogout}
+                  className="mt-2 bg-blue-600 hover:bg-blue-500 transition duration-300 text-white px-3 py-1 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

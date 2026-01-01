@@ -1,6 +1,10 @@
 export const getAuthHeader = () => {
-  const token = localStorage.getItem("token");
+  const stored = localStorage.getItem("auth");
+  const auth = stored ? JSON.parse(stored) : null;
+
   return {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      Authorization: `Bearer ${auth?.token}`,
+    },
   };
 };
