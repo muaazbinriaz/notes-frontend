@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Nav from "./components/Nav";
 import NewNotes from "./pages/NewNotes";
 
@@ -13,7 +13,8 @@ import NotFound from "./pages/NotFound";
 const App = () => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
-
+  const stored = localStorage.getItem("auth");
+  const auth = stored ? JSON.parse(stored) : null;
   const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
 
   return (
@@ -31,7 +32,11 @@ const App = () => {
 
       {allowedUrls.includes(path) && <Nav />}
       <Routes>
-        <Route index element={<Login />} />
+        <Route
+          path="/"
+          element={auth?.token ? <Navigate to="/home" /> : <Login />}
+        />
+
         <Route path="/signup" element={<Signup />} />
 
         <Route
