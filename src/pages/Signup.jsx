@@ -4,8 +4,10 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 import RoundedLoader from "../components/RoundedLoader";
+import useAuth from "../context/useAuth";
 
 function Signup() {
+  const { login, auth } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [signupInfo, setSignupInfo] = useState({
@@ -33,17 +35,14 @@ function Signup() {
       const response = await axios.post(url, { name, email, password });
 
       if (response.data.success) {
-        localStorage.setItem(
-          "auth",
-          JSON.stringify({
-            token: response.data.token,
-            user: {
-              _id: response.data._id,
-              name: response.data.name,
-              email: response.data.email,
-            },
-          })
-        );
+        login({
+          token: response.data.token,
+          user: {
+            _id: response.data._id,
+            name: response.data.name,
+            email: response.data.email,
+          },
+        });
         toast.success("Signup successful!");
 
         setTimeout(() => navigate("/home"), 400);

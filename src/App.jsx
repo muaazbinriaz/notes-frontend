@@ -7,18 +7,49 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import ProtectedRoute from "./components/ProtectedRoute";
+
 import NotFound from "./pages/NotFound";
+import useAuth from "./context/useAuth";
+import RequireAuth from "./components/RequireAuth";
 
 const App = () => {
   const location = useLocation();
+  const { auth } = useAuth();
   const path = location.pathname.split("/")[1];
-  const stored = localStorage.getItem("auth");
-  const auth = stored ? JSON.parse(stored) : null;
   const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
 
   return (
     <>
+      {allowedUrls.includes(path) && <Nav />}
+      <Routes>
+        <Route
+          path="/"
+          element={auth?.token ? <Navigate to="/home" /> : <Login />}
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        <Route
+          path="/NewNotes"
+          element={
+            <RequireAuth>
+              <NewNotes />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/home"
+          element={
+            <RequireAuth>
+              <Home />
+            </RequireAuth>
+          }
+        />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
       <ToastContainer
         position="top-right"
         autoClose={500}
@@ -29,35 +60,6 @@ const App = () => {
         draggable
         pauseOnHover
       />
-
-      {allowedUrls.includes(path) && <Nav />}
-      <Routes>
-        <Route
-          path="/"
-          element={auth?.token ? <Navigate to="/home" /> : <Login />}
-        />
-
-        <Route path="/signup" element={<Signup />} />
-
-        <Route
-          path="/NewNotes"
-          element={
-            <ProtectedRoute>
-              <NewNotes />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="*" element={<NotFound />} />
-      </Routes>
     </>
   );
 };

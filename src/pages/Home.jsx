@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import axios from "axios";
 import RoundedLoader from "../components/RoundedLoader";
-import { getAuthHeader } from "../utils/helper";
+import useAuth from "../context/useAuth";
 
 const Home = () => {
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const [notes, setNotes] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
@@ -28,7 +29,11 @@ const Home = () => {
           `${
             import.meta.env.VITE_BASE_URL
           }/api/website/notes/getNotes?page=${page}&limit=${limit}`,
-          getAuthHeader()
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          }
         );
         setNotes(res.data.data);
         setTotalNotes({

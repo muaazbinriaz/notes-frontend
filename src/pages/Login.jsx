@@ -4,9 +4,11 @@ import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
 import RoundedLoader from "../components/RoundedLoader";
+import useAuth from "../context/useAuth";
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -32,17 +34,14 @@ function Login() {
       const response = await axios.post(url, { email, password });
 
       if (response.data.success) {
-        localStorage.setItem(
-          "auth",
-          JSON.stringify({
-            token: response.data.token,
-            user: {
-              _id: response.data._id,
-              name: response.data.name,
-              email: response.data.email,
-            },
-          })
-        );
+        login({
+          token: response.data.token,
+          user: {
+            _id: response.data._id,
+            name: response.data.name,
+            email: response.data.email,
+          },
+        });
         toast.success("Login successful!");
 
         setTimeout(() => navigate("/home"), 200);

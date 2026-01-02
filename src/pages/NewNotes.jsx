@@ -5,12 +5,13 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 import { toast } from "react-toastify";
 import RoundedLoader from "../components/RoundedLoader";
-import { getAuthHeader } from "../utils/helper";
+import useAuth from "../context/useAuth";
 
 const NewNotes = () => {
   const titleLimit = 100;
   const bodyLimit = 1000;
 
+  const { auth } = useAuth();
   const [notes, setNotes] = useState([]);
   const [titleCount, setTitleCount] = useState(0);
   const [bodyCount, setBodyCount] = useState(0);
@@ -26,6 +27,10 @@ const NewNotes = () => {
   const id = searchParams.get("id");
   const [editingNote, setEditingNote] = useState(null);
 
+  const authHeader = () => ({
+    headers: { Authorization: `Bearer ${auth.token}` },
+  });
+
   useEffect(() => {
     if (!id) return;
 
@@ -36,7 +41,7 @@ const NewNotes = () => {
           `${
             import.meta.env.VITE_BASE_URL
           }/api/website/notes/getNoteById/${id}`,
-          getAuthHeader()
+          { headers: { Authorization: `Bearer ${auth?.token}` } }
         );
         const note = response.data.data;
         setEditingNote(note);
@@ -53,7 +58,7 @@ const NewNotes = () => {
     };
 
     fetchNote();
-  }, [id]);
+  }, [id, auth?.token]);
 
   useEffect(() => {
     if (id && editingNote) {
@@ -93,7 +98,7 @@ const NewNotes = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/insert`,
         { title: notesTitle, body: notesBody },
-        getAuthHeader()
+        authHeader()
       );
 
       if (response.data.success) {
@@ -122,7 +127,7 @@ const NewNotes = () => {
             `${
               import.meta.env.VITE_BASE_URL
             }/api/website/notes/deleteNote/${id}`,
-            getAuthHeader()
+            authHeader()
           );
 
           if (res.data.success) {
@@ -157,7 +162,7 @@ const NewNotes = () => {
       const res = await axios.put(
         `${import.meta.env.VITE_BASE_URL}/api/website/notes/updateNote/${id}`,
         { title: notesTitle, body: notesBody },
-        getAuthHeader()
+        authHeader()
       );
 
       if (res.data.success) {
