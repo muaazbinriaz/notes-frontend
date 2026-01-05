@@ -48,7 +48,7 @@ const Home = () => {
       }
     };
     fetchNotes();
-  }, [page, limit]);
+  }, [page, limit, auth.token]);
 
   const filteredNotes = Array.isArray(notes)
     ? notes.filter((note) => {
