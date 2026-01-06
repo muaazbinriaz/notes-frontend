@@ -11,7 +11,82 @@ const Home = () => {
   const [isBoxOpen, setIsBoxOpen] = useState(false);
   const [completed, setCompleted] = useState([]);
 
+<<<<<<< HEAD
   const handleClose = () => setIsBoxOpen(false);
+=======
+  useEffect(() => {
+    const fetchNotes = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/website/notes/getNotes?page=${page}&limit=${limit}`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          }
+        );
+        setNotes(res.data.data);
+        setTotalNotes({
+          totalNotes: res.data.totalNotes,
+          totalPages: Math.ceil(res.data.totalNotes / limit),
+          currentPage: page,
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotes();
+  }, [page, limit, auth.token]);
+
+  const filteredNotes = Array.isArray(notes)
+    ? notes.filter((note) => {
+        const title = note?.title || "";
+        const body = note?.body || "";
+        return (
+          title.toLowerCase().includes(searchFilter.toLowerCase()) ||
+          body.toLowerCase().includes(searchFilter.toLowerCase())
+        );
+      })
+    : [];
+
+  const sortedNotes = [...filteredNotes].sort((a, b) => {
+    if (sortBy === "alphabet") {
+      return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
+    }
+    if (sortBy === "lastEdited") {
+      return new Date(b.updatedAt) - new Date(a.updatedAt);
+    }
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
+  if (loading) {
+    return <RoundedLoader />;
+  }
+
+  if (!Array.isArray(notes) || notes.length === 0) {
+    return (
+      <>
+        <div className="flex max-w-175 w-full mx-auto mt-28 p-5">
+          <p className="bg-[#fafafa] py-4.5 text-center text-[21px] font-medium text-[#1f5672] rounded max-w-175 w-full">
+            No Notes here! Create your First Note ✨
+          </p>
+        </div>
+        <div className="fixed bottom-0 m-5 right-0">
+          <Link to={"/NewNotes"}>
+            <button className="border text-lg cursor-pointer rounded-lg bg-[#437993] p-5 text-white hover:bg-black duration-500">
+              Create New Note
+            </button>
+          </Link>
+        </div>
+      </>
+    );
+  }
+>>>>>>> 75a58c475273c087eb848afd03dbc89fbc0f4d56
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "Note",
