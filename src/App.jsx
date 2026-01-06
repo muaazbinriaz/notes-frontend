@@ -16,7 +16,7 @@ const App = () => {
   const location = useLocation();
   const { auth } = useAuth();
   const path = location.pathname.split("/")[1];
-  const allowedUrls = ["", "NewNotes", "signup", "login", "home"];
+  const allowedUrls = ["", "signup", "login", "home"];
 
   return (
     <>

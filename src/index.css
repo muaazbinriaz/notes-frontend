@@ -1,1 +1,119 @@
 @import "tailwindcss";
+
+/* 
+import { useState } from "react";
+import AddNote from "../components/AddNote";
+import { useNotes } from "../context/NotesContext";
+import { useDrag, useDrop } from "react-dnd";
+
+const NoteItem = ({ note }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "Note",
+    item: { id: note._id, title: note.title, body: note.body },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <li
+      ref={drag}
+      className={`p-2 rounded border ${isDragging ? "opacity-50" : ""}`}
+    >
+      <div className="font-medium">{note.title}</div>
+      <div className="text-sm">{note.body}</div>
+    </li>
+  );
+};
+
+const CompletedItem = ({ note }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "Note",
+    item: { id: note.id, title: note.title, body: note.body },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <li
+      ref={drag}
+      className={`p-2 rounded border ${isDragging ? "opacity-50" : ""}`}
+    >
+      {note.title}
+    </li>
+  );
+};
+
+const Home = () => {
+  const { notes, addNote, removeNote } = useNotes();
+  const [isBoxOpen, setIsBoxOpen] = useState(false);
+  const [completed, setCompleted] = useState([]);
+
+  const handleClose = () => setIsBoxOpen(false);
+
+  const [{ isOver }, dropCompleted] = useDrop(() => ({
+    accept: "Note",
+    drop: (item) => {
+      setCompleted((prev) => [...prev, item]);
+      removeNote(item.id);
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
+
+  const [{ isTaskOver }, dropTask] = useDrop(() => ({
+    accept: "Note",
+    drop: (item) => {
+      setCompleted((prev) => prev.filter((n) => n.id !== item.id));
+      addNote({ title: item.title, body: item.body });
+    },
+    collect: (monitor) => ({
+      isTaskOver: monitor.isOver(),
+    }),
+  }));
+
+  return (
+    <div className="my-10 flex justify-center gap-8">
+      <div className="bg-[#78afcb] max-w-70 w-full pb-3 rounded-xl">
+        <p className="p-3 pl-6">Task</p>
+        <ul
+          ref={dropTask}
+          className={`bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2 ${
+            isTaskOver ? "bg-blue-200" : ""
+          }`}
+        >
+          {notes.map((note) => (
+            <NoteItem key={note._id} note={note} />
+          ))}
+        </ul>
+        {isBoxOpen ? (
+          <AddNote onAdd={addNote} onClose={handleClose} />
+        ) : (
+          <div
+            onClick={() => setIsBoxOpen(true)}
+            className="w-63 pl-2 pb-1 mx-auto mt-5 hover:bg-[#2285b7] rounded-lg transition duration-300 cursor-pointer"
+          >
+            <span className="text-[20px]">+</span> Add a card
+          </div>
+        )}
+      </div>
+      <div
+        ref={dropCompleted}
+        className={`bg-[#60cdf5] w-70 h-40 rounded-xl ${
+          isOver ? "bg-blue-400" : ""
+        }`}
+      >
+        <p className="p-3">Completed</p>
+        <ul className="bg-white h-16 w-63 p-2 rounded-lg mx-auto">
+          {completed.map((note) => (
+            <CompletedItem key={note.id} note={note} />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default Home; */
