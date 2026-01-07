@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
 import useAuth from "./useAuth";
+import API from "../utils/api";
 
 const NotesContext = createContext();
 
@@ -12,10 +12,7 @@ export const NotesProvider = ({ children }) => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/website/notes/getNotes`,
-          { headers: { Authorization: `Bearer ${auth.token}` } }
-        );
+        const res = await API.get("/notes/getNotes");
         setNotes(res.data.data || []);
       } catch (err) {
         console.error("Failed to fetch notes:", err);
@@ -26,11 +23,7 @@ export const NotesProvider = ({ children }) => {
 
   const addNote = async (note) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/website/notes/insert`,
-        note,
-        { headers: { Authorization: `Bearer ${auth.token}` } }
-      );
+      const res = await API.post("/notes/insert", note);
       if (res.data.success) {
         setNotes((prev) => [...prev, res.data.data]);
       }
@@ -40,12 +33,19 @@ export const NotesProvider = ({ children }) => {
   };
 
   const moveToCompleted = (note) => {
-    setNotes((prev) => prev.filter((n) => n._id !== note.id));
+    setNotes((prev) => prev.filter((n) => n._id !== note._id));
     setCompleted((prev) => [...prev, note]);
   };
 
+  const moveToTasks = (note) => {
+    setCompleted((prev) => prev.filter((n) => n._id !== note._id));
+    setNotes((prev) => [...prev, note]);
+  };
+
   return (
-    <NotesContext.Provider value={{ notes, addNote, moveToCompleted }}>
+    <NotesContext.Provider
+      value={{ notes, completed, addNote, moveToCompleted, moveToTasks }}
+    >
       {children}
     </NotesContext.Provider>
   );

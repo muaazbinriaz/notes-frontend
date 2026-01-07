@@ -1,37 +1,46 @@
 import { useState } from "react";
+import { useDrop } from "react-dnd";
 import AddNote from "../components/AddNote";
 import { useNotes } from "../context/NotesContext";
-import { useDrop } from "react-dnd";
 import NoteItem from "../components/NoteItem";
 
-<NoteItem />;
-
 const Home = () => {
-  const { notes, addNote, moveToCompleted } = useNotes();
+  const { notes, completed, addNote, moveToTasks, moveToCompleted } =
+    useNotes();
   const [isBoxOpen, setIsBoxOpen] = useState(false);
-  const [completed, setCompleted] = useState([]);
-
   const handleClose = () => setIsBoxOpen(false);
-
-  const [{ isOver }, drop] = useDrop(() => ({
+  const [{ isOverTask }, taskDropRef] = useDrop(() => ({
+    accept: "Note",
+    drop: (item) => {
+      moveToTasks(item);
+    },
+    collect: (monitor) => ({
+      isOverTask: monitor.isOver(),
+    }),
+  }));
+  const [{ isOverCompleted }, completedDropRef] = useDrop(() => ({
     accept: "Note",
     drop: (item) => {
       moveToCompleted(item);
-      setCompleted((prev) => [...prev, item]);
     },
-    collect: (monitor) => ({ isOver: monitor.isOver() }),
+    collect: (monitor) => ({
+      isOverCompleted: monitor.isOver(),
+    }),
   }));
   return (
     <div className="my-10 flex justify-center gap-8 items-start">
-      <div className="bg-[#78afcb] max-w-70 w-full pb-3 rounded-xl">
+      <div
+        ref={taskDropRef}
+        className={`bg-[#78afcb] max-w-70 w-full pb-3 rounded-xl ${
+          isOverTask ? "bg-blue-400" : ""
+        }`}
+      >
         <p className="p-3 pl-6">Task</p>
-
         <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
           {notes.map((note) => (
             <NoteItem key={note._id} note={note} />
           ))}
         </ul>
-
         {isBoxOpen ? (
           <AddNote onAdd={addNote} onClose={handleClose} />
         ) : (
@@ -45,22 +54,17 @@ const Home = () => {
       </div>
 
       <div
-        ref={drop}
+        ref={completedDropRef}
         className={`bg-[#60cdf5] pb-5 w-70 rounded-xl ${
-          isOver ? "bg-blue-400" : ""
+          isOverCompleted ? "bg-blue-400" : ""
         }`}
       >
         <p className="p-3">Completed</p>
-        <div>
-          <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
-            {completed.map((note) => (
-              <li key={note.id} className="p-2 rounded border">
-                <div>{note.title}</div>
-                <div>{note.body}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
+          {completed.map((note) => (
+            <NoteItem key={note._id} note={note} />
+          ))}
+        </ul>
       </div>
     </div>
   );

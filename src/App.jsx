@@ -1,7 +1,6 @@
 import Home from "./pages/Home";
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Nav from "./components/Nav";
-import NewNotes from "./pages/NewNotes";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,15 +27,6 @@ const App = () => {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-
-        <Route
-          path="/NewNotes"
-          element={
-            <RequireAuth>
-              <NewNotes />
-            </RequireAuth>
-          }
-        />
 
         <Route
           path="/home"
