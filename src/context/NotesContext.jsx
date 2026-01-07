@@ -6,7 +6,6 @@ const NotesContext = createContext();
 
 export const NotesProvider = ({ children }) => {
   const [notes, setNotes] = useState([]);
-  const [completed, setCompleted] = useState([]);
   const { auth } = useAuth();
 
   useEffect(() => {
@@ -32,19 +31,24 @@ export const NotesProvider = ({ children }) => {
     }
   };
 
-  const moveToCompleted = (note) => {
-    setNotes((prev) => prev.filter((n) => n._id !== note._id));
-    setCompleted((prev) => [...prev, note]);
+  const updateNoteStatus = async (id, status) => {
+    setNotes((prev) => prev.map((n) => (n._id === id ? { ...n, status } : n)));
+    try {
+      const res = await API.put(`/notes/updateStatus/${id}`, { status });
+      if (res.data.success) {
+        const updated = res.data.data;
+        setNotes((prev) => prev.map((n) => (n._id === id ? updated : n)));
+      }
+    } catch (err) {
+      console.error("Failed to update note status:", err);
+    }
   };
-
-  const moveToTasks = (note) => {
-    setCompleted((prev) => prev.filter((n) => n._id !== note._id));
-    setNotes((prev) => [...prev, note]);
-  };
+  const taskNotes = notes.filter((n) => n.status === "task");
+  const completedNotes = notes.filter((n) => n.status === "completed");
 
   return (
     <NotesContext.Provider
-      value={{ notes, completed, addNote, moveToCompleted, moveToTasks }}
+      value={{ notes, addNote, updateNoteStatus, taskNotes, completedNotes }}
     >
       {children}
     </NotesContext.Provider>

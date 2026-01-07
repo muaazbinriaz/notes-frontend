@@ -5,14 +5,13 @@ import { useNotes } from "../context/NotesContext";
 import NoteItem from "../components/NoteItem";
 
 const Home = () => {
-  const { notes, completed, addNote, moveToTasks, moveToCompleted } =
-    useNotes();
+  const { taskNotes, completedNotes, addNote, updateNoteStatus } = useNotes();
   const [isBoxOpen, setIsBoxOpen] = useState(false);
   const handleClose = () => setIsBoxOpen(false);
   const [{ isOverTask }, taskDropRef] = useDrop(() => ({
     accept: "Note",
     drop: (item) => {
-      moveToTasks(item);
+      updateNoteStatus(item._id, "task");
     },
     collect: (monitor) => ({
       isOverTask: monitor.isOver(),
@@ -21,7 +20,7 @@ const Home = () => {
   const [{ isOverCompleted }, completedDropRef] = useDrop(() => ({
     accept: "Note",
     drop: (item) => {
-      moveToCompleted(item);
+      updateNoteStatus(item._id, "completed");
     },
     collect: (monitor) => ({
       isOverCompleted: monitor.isOver(),
@@ -36,11 +35,16 @@ const Home = () => {
         }`}
       >
         <p className="p-3 pl-6">Task</p>
-        <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
-          {notes.map((note) => (
-            <NoteItem key={note._id} note={note} />
-          ))}
-        </ul>
+        {taskNotes.length > 0 ? (
+          <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
+            {taskNotes.map((note) => (
+              <NoteItem key={note._id} note={note} />
+            ))}
+          </ul>
+        ) : (
+          <p className="text-white px-4 pb-2 italic">No tasks yet</p>
+        )}
+
         {isBoxOpen ? (
           <AddNote onAdd={addNote} onClose={handleClose} />
         ) : (
@@ -60,11 +64,15 @@ const Home = () => {
         }`}
       >
         <p className="p-3">Completed</p>
-        <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
-          {completed.map((note) => (
-            <NoteItem key={note._id} note={note} />
-          ))}
-        </ul>
+        {completedNotes.length > 0 ? (
+          <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
+            {completedNotes.map((note) => (
+              <NoteItem key={note._id} note={note} />
+            ))}
+          </ul>
+        ) : (
+          <p className="text-white px-4 pb-2 italic">No completed notes</p>
+        )}
       </div>
     </div>
   );
