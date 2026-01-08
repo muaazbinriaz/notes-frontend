@@ -5,7 +5,8 @@ import { useNotes } from "../context/NotesContext";
 import NoteItem from "../components/NoteItem";
 
 const Home = () => {
-  const { taskNotes, completedNotes, addNote, updateNoteStatus } = useNotes();
+  const { taskNotes, completedNotes, addNote, deleteNote, updateNoteStatus } =
+    useNotes();
   const [isBoxOpen, setIsBoxOpen] = useState(false);
   const handleClose = () => setIsBoxOpen(false);
   const [{ isOverTask }, taskDropRef] = useDrop(() => ({
@@ -38,7 +39,7 @@ const Home = () => {
         {taskNotes.length > 0 ? (
           <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
             {taskNotes.map((note) => (
-              <NoteItem key={note._id} note={note} />
+              <NoteItem key={note._id} note={note} onDelete={deleteNote} />
             ))}
           </ul>
         ) : (
@@ -67,7 +68,7 @@ const Home = () => {
         {completedNotes.length > 0 ? (
           <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
             {completedNotes.map((note) => (
-              <NoteItem key={note._id} note={note} />
+              <NoteItem key={note._id} note={note} onDelete={deleteNote} />
             ))}
           </ul>
         ) : (

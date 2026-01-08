@@ -31,6 +31,17 @@ export const NotesProvider = ({ children }) => {
     }
   };
 
+  const deleteNote = async (id) => {
+    try {
+      const res = await API.delete(`/notes/deleteNote/${id}`);
+      if (res.data.success) {
+        setNotes((prev) => prev.filter((n) => n._id !== id));
+      }
+    } catch (err) {
+      console.log("Error deleting note:", err);
+    }
+  };
+
   const updateNoteStatus = async (id, status) => {
     setNotes((prev) => prev.map((n) => (n._id === id ? { ...n, status } : n)));
     try {
@@ -48,7 +59,14 @@ export const NotesProvider = ({ children }) => {
 
   return (
     <NotesContext.Provider
-      value={{ notes, addNote, updateNoteStatus, taskNotes, completedNotes }}
+      value={{
+        notes,
+        addNote,
+        updateNoteStatus,
+        deleteNote,
+        taskNotes,
+        completedNotes,
+      }}
     >
       {children}
     </NotesContext.Provider>

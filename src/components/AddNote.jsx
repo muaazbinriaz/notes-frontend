@@ -32,6 +32,7 @@ const AddNote = ({ onAdd, onClose }) => {
         value={body}
         onChange={(e) => setBody(e.target.value)}
       />
+      <span></span>
       <div className="pl-3.5 pt-2">
         <button
           className="bg-blue-600 text-white py-1 px-2 rounded-md cursor-pointer mr-2"
