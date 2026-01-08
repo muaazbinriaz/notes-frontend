@@ -38,7 +38,7 @@ const Nav = () => {
         <div>
           <button
             onClick={() => setOpen(!open)}
-            className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-[#78AFCB] text-white font-bold flex items-center justify-center"
           >
             {firstLetter}
           </button>

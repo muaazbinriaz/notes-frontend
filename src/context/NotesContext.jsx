@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import useAuth from "./useAuth";
 import API from "../utils/api";
+import { toast } from "react-toastify";
 
 const NotesContext = createContext();
 
@@ -36,6 +37,7 @@ export const NotesProvider = ({ children }) => {
       const res = await API.delete(`/notes/deleteNote/${id}`);
       if (res.data.success) {
         setNotes((prev) => prev.filter((n) => n._id !== id));
+        toast.success("Note deleted successfully");
       }
     } catch (err) {
       console.log("Error deleting note:", err);

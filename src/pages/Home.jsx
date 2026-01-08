@@ -3,6 +3,7 @@ import { useDrop } from "react-dnd";
 import AddNote from "../components/AddNote";
 import { useNotes } from "../context/NotesContext";
 import NoteItem from "../components/NoteItem";
+import { IoMdAdd } from "react-icons/io";
 
 const Home = () => {
   const { taskNotes, completedNotes, addNote, deleteNote, updateNoteStatus } =
@@ -35,15 +36,17 @@ const Home = () => {
           isOverTask ? "bg-blue-400" : ""
         }`}
       >
-        <p className="p-3 pl-6">Task</p>
+        <p className="p-3 pl-6 text-[17px] font-semibold text-[#012a3e]">
+          Task
+        </p>
         {taskNotes.length > 0 ? (
-          <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
+          <ul className="w-63 p-2 mx-auto flex flex-col gap-2">
             {taskNotes.map((note) => (
               <NoteItem key={note._id} note={note} onDelete={deleteNote} />
             ))}
           </ul>
         ) : (
-          <p className="text-white px-4 pb-2 italic">No tasks yet</p>
+          <p className="text-white px-4 text-lg pb-1 italic">No tasks yet</p>
         )}
 
         {isBoxOpen ? (
@@ -51,28 +54,35 @@ const Home = () => {
         ) : (
           <div
             onClick={() => setIsBoxOpen(true)}
-            className="w-63 pl-2 pb-1 mx-auto mt-5 hover:bg-[#2285b7] rounded-lg transition duration-300 cursor-pointer"
+            className="w-63 pl-2 py-1.5 mx-auto mt-5 flex items-center gap-2 hover:bg-[#5b97b5] rounded-lg transition duration-300 cursor-pointer"
           >
-            <span className="text-[20px]">+</span> Add a card
+            <span className="text-[20px]">
+              <IoMdAdd className="text-[#012131]" />
+            </span>
+            <span className="font-medium text-[#012a3e]">Add a card</span>
           </div>
         )}
       </div>
 
       <div
         ref={completedDropRef}
-        className={`bg-[#60cdf5] pb-5 w-70 rounded-xl ${
+        className={`bg-[#60cdf5]  pb-5 w-70 rounded-xl ${
           isOverCompleted ? "bg-blue-400" : ""
         }`}
       >
-        <p className="p-3">Completed</p>
+        <p className="p-3 pl-6 text-[17px] font-semibold text-[#02455e]">
+          Completed
+        </p>
         {completedNotes.length > 0 ? (
-          <ul className="bg-white w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
+          <ul className=" w-63 p-2 rounded-lg mx-auto flex flex-col gap-2">
             {completedNotes.map((note) => (
               <NoteItem key={note._id} note={note} onDelete={deleteNote} />
             ))}
           </ul>
         ) : (
-          <p className="text-white px-4 pb-2 italic">No completed notes</p>
+          <p className="text-white text-lg px-4 pb-2 italic">
+            No completed notes
+          </p>
         )}
       </div>
     </div>
