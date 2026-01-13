@@ -20,7 +20,7 @@ const PromptClamp = ({ text }) => {
         {isExpanded || !shouldCut ? text : text.substring(0, 100)}
         {shouldCut && (
           <span
-            className="text-blue-800 hover:text-blue-700"
+            className="text-blue-800 hover:text-blue-700 cursor-pointer"
             onClick={handleClick}
           >
             {isExpanded ? " ...See Less" : " ...See More"}

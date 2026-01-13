@@ -26,6 +26,7 @@ export const NotesProvider = ({ children }) => {
       const res = await API.post("/notes/insert", note);
       if (res.data.success) {
         setNotes((prev) => [...prev, res.data.data]);
+        toast.success("Note added successfully");
       }
     } catch (err) {
       console.error("Error adding note:", err);
@@ -44,30 +45,44 @@ export const NotesProvider = ({ children }) => {
     }
   };
 
-  const updateNoteStatus = async (id, status) => {
-    setNotes((prev) => prev.map((n) => (n._id === id ? { ...n, status } : n)));
+  const editNote = async (id, updateNote) => {
     try {
-      const res = await API.put(`/notes/updateStatus/${id}`, { status });
+      const res = await API.put(`/notes/updateNote/${id}`, updateNote);
       if (res.data.success) {
         const updated = res.data.data;
+
         setNotes((prev) => prev.map((n) => (n._id === id ? updated : n)));
+
+        toast.success("Note updated successfully");
       }
     } catch (err) {
-      console.error("Failed to update note status:", err);
+      console.log("Error editing note", err);
     }
   };
-  const taskNotes = notes.filter((n) => n.status === "task");
-  const completedNotes = notes.filter((n) => n.status === "completed");
+
+  const moveNote = async (noteId, listId) => {
+    try {
+      setNotes((prev) =>
+        prev.map((n) => (n._id === noteId ? { ...n, listId } : n))
+      );
+      const res = await API.put(`/notes/move/${noteId}`, { listId });
+      if (res.data.success) {
+        const updated = res.data.data;
+        setNotes((prev) => prev.map((n) => (n._id === noteId ? updated : n)));
+      }
+    } catch (err) {
+      console.error("Failed to move note:", err);
+    }
+  };
 
   return (
     <NotesContext.Provider
       value={{
         notes,
         addNote,
-        updateNoteStatus,
+        moveNote,
         deleteNote,
-        taskNotes,
-        completedNotes,
+        editNote,
       }}
     >
       {children}

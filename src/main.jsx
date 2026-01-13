@@ -6,15 +6,22 @@ import AuthProvider from "./context/AuthProvider.jsx";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { NotesProvider } from "./context/NotesContext.jsx";
+import { ListsProvider } from "./context/ListContext.jsx";
+import { Provider } from "react-redux";
+import { store } from "./redux/store.js";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AuthProvider>
-      <NotesProvider>
-        <DndProvider backend={HTML5Backend}>
-          <App />
-        </DndProvider>
-      </NotesProvider>
+      <ListsProvider>
+        <NotesProvider>
+          <Provider store={store}>
+            <DndProvider backend={HTML5Backend}>
+              <App />
+            </DndProvider>
+          </Provider>
+        </NotesProvider>
+      </ListsProvider>
     </AuthProvider>
   </BrowserRouter>
 );
