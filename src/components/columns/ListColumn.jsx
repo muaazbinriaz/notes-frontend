@@ -1,9 +1,9 @@
 import { useDrop } from "react-dnd";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { useNotes } from "../../context/notesContext";
 import NoteItem from "../notes/NoteItem";
 import NoteForm from "../notes/NoteForm";
+import { useNotes } from "../../context/NotesContext.jsx";
 
 const ListColumn = ({ list }) => {
   const { notes, addNote, moveNote, editNote, deleteNote } = useNotes();
