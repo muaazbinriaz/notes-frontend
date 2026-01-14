@@ -3,16 +3,26 @@ import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import NoteItem from "../notes/NoteItem";
 import NoteForm from "../notes/NoteForm";
-import { useNotes } from "../../context/NotesContext.jsx";
+import {
+  useAddNoteMutation,
+  useDeleteNoteMutation,
+  useEditNoteMutation,
+  useGetNotesQuery,
+  useMoveNoteMutation,
+} from "../../features/lists/noteApi";
 
 const ListColumn = ({ list }) => {
-  const { notes, addNote, moveNote, editNote, deleteNote } = useNotes();
+  const { data: notes, isLoading, isError, error } = useGetNotesQuery();
+  const [addNote] = useAddNoteMutation();
+  const [deleteNote] = useDeleteNoteMutation();
+  const [editNote] = useEditNoteMutation();
+  const [moveNote] = useMoveNoteMutation();
   const [isBoxOpen, setIsBoxOpen] = useState(false);
 
-  const listNotes = notes.filter((n) => n.listId === list._id);
+  const listNotes = notes ? notes.filter((n) => n.listId === list._id) : [];
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "Note",
-    drop: (item) => moveNote(item._id, list._id),
+    drop: (item) => moveNote({ noteId: item._id, listId: list._id }),
     collect: (monitor) => ({ isOver: monitor.isOver() }),
   }));
 
@@ -32,8 +42,10 @@ const ListColumn = ({ list }) => {
             <NoteItem
               key={note._id}
               note={note}
-              onDelete={deleteNote}
-              onEdit={editNote}
+              onDelete={() => deleteNote(note._id)}
+              onEdit={(updated) =>
+                editNote({ id: note._id, updateNote: updated })
+              }
             />
           ))}
         </ul>

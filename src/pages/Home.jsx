@@ -1,12 +1,15 @@
-import { useLists } from "../context/ListContext";
 import ListColumn from "../components/columns/ListColumn";
 import AddList from "../components/AddList";
+import { useGetListsQuery } from "../features/lists/ListApi";
+import RoundedLoader from "../components/RoundedLoader";
 
 const Home = () => {
-  const { lists } = useLists();
-
+  const { data: lists, isLoading, isError, error } = useGetListsQuery();
+  if (isLoading) return <RoundedLoader />;
+  if (isError)
+    return <p>Error: {error?.data?.message || "Something went wrong"}</p>;
   return (
-    <div className="my-10 mx-3 flex gap-6">
+    <div className="my-10 mx-3 flex gap-6 items-start">
       {lists.map((list) => (
         <ListColumn key={list._id} list={list} />
       ))}

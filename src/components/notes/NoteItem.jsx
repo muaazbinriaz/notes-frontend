@@ -17,7 +17,7 @@ const NoteItem = ({ note, onDelete, onEdit }) => {
     return (
       <NoteForm
         initialData={note}
-        onSubmit={(data) => onEdit(note._id, data)}
+        onSubmit={(data) => onEdit(data)}
         onClose={() => setEditing(false)}
       />
     );

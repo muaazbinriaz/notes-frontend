@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useLists } from "../context/ListContext";
 import { RxCross2 } from "react-icons/rx";
+import { useAddListMutation } from "../features/lists/ListApi";
 
 const AddList = () => {
-  const { addList } = useLists();
+  const [addList] = useAddListMutation();
   const [title, setTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
   const handleAdd = () => {
     if (!title.trim()) return;
     addList(title.trim());
