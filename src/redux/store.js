@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { listApi } from "../features/lists/ListApi";
+import { listApi } from "../features/lists/listApi";
 import { noteApi } from "../features/lists/noteApi";
 import { authApi } from "../features/lists/authApi";
 import authReducer, { setCredentials } from "../features/auth/authSlice";
-// file path changed
+//  path changed
 
 export const store = configureStore({
   reducer: {
