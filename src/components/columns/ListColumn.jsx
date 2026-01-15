@@ -14,7 +14,7 @@ import {
   useGetNotesQuery,
   useMoveNoteMutation,
 } from "../../features/lists/noteApi";
-import { useDeleteListMutation } from "../../features/lists/ListApi";
+import { useDeleteListMutation } from "../../features/lists/listApi";
 
 const ListColumn = ({ list }) => {
   const { data: notes } = useGetNotesQuery();
