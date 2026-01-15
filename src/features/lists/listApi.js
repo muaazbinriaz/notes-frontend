@@ -20,7 +20,16 @@ export const listApi = createApi({
       }),
       invalidatesTags: ["Lists"],
     }),
+
+    deleteList: builder.mutation({
+      query: (id) => ({
+        url: `/lists/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Lists"],
+    }),
   }),
 });
 
-export const { useGetListsQuery, useAddListMutation } = listApi;
+export const { useGetListsQuery, useAddListMutation, useDeleteListMutation } =
+  listApi;

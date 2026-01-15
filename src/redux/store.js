@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { listApi } from "../features/lists/ListApi";
 import { noteApi } from "../features/lists/noteApi";
 import { authApi } from "../features/lists/authApi";
+import authReducer, { setCredentials } from "../features/auth/authSlice";
 
 export const store = configureStore({
   reducer: {
     [listApi.reducerPath]: listApi.reducer,
     [noteApi.reducerPath]: noteApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -15,3 +17,9 @@ export const store = configureStore({
       .concat(noteApi.middleware)
       .concat(authApi.middleware),
 });
+
+const storedAuth = localStorage.getItem("auth");
+if (storedAuth) {
+  const parsed = JSON.parse(storedAuth);
+  store.dispatch(setCredentials(parsed));
+}

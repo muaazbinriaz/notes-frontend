@@ -23,11 +23,12 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
     onSubmit({ title, body });
     onClose();
   };
+
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center ">
       <div className="relative">
         <input
-          className="bg-white w-63 pl-2 rounded-lg ml-3.5 py-2.5 mt-2 outline-none ring-1 ring-amber-300"
+          className="bg-white w-68 p-2 rounded-lg  py-2.5 mt-2 outline-none ring-1 ring-amber-300"
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
@@ -43,7 +44,7 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
 
       <div className="relative">
         <textarea
-          className="bg-white w-63 pl-2 rounded-lg ml-3.5 py-2.5 mt-2 resize-none outline-none ring-1 ring-amber-300"
+          className="bg-white w-68 p-2 rounded-lg  py-2.5 mt-2 resize-none outline-none ring-1 ring-amber-300"
           rows={3}
           value={body}
           onChange={(e) => {
@@ -57,9 +58,9 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
         </span>
       </div>
 
-      <div className="pl-3.5 pt-2 flex">
+      <div className=" pt-2 flex ">
         <button
-          className="bg-blue-500 hover:bg-[#0a7db7] duration-300 font-semibold text-white py-1 px-2.5 rounded-md mr-2"
+          className="bg-blue-500 hover:bg-[#0a7db7] duration-300 font-semibold text-white py-1 px-4 rounded-md mr-2"
           onClick={submit}
         >
           {initialData ? "Save" : "Add card"}

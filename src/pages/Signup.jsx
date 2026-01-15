@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
-
 import RoundedLoader from "../components/RoundedLoader";
-import useAuth from "../context/useAuth";
+import { useDispatch } from "react-redux";
+import { useSignupMutation } from "../features/lists/authApi";
+import { setCredentials } from "../features/auth/authSlice";
 
 function Signup() {
-  const { login, auth } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [signup, { isLoading }] = useSignupMutation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [signupInfo, setSignupInfo] = useState({
     name: "",
@@ -29,26 +29,16 @@ function Signup() {
       return toast.error("Please fill all fields");
     }
 
-    setLoading(true);
     try {
-      const url = `${import.meta.env.VITE_BASE_URL}/api/website/auth/signup`;
-      const response = await axios.post(url, { name, email, password });
+      const result = await signup({ name, email, password }).unwrap();
+      dispatch(setCredentials({ user: result, token: result.token }));
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({ user: result, token: result.token })
+      );
 
-      if (response.data.success) {
-        login({
-          token: response.data.token,
-          user: {
-            _id: response.data._id,
-            name: response.data.name,
-            email: response.data.email,
-          },
-        });
-        toast.success("Signup successful!");
-
-        setTimeout(() => navigate("/home"), 400);
-      } else {
-        toast.error(response.data.message || "Signup failed");
-      }
+      toast.success("Signup successful!");
+      setTimeout(() => navigate("/home"), 400);
     } catch (err) {
       console.error("Signup error:", err);
       toast.error(err.response?.data?.message || "Server error during signup");
@@ -57,7 +47,7 @@ function Signup() {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <RoundedLoader />
       ) : (
         <div className="flex items-center justify-center mt-20">

@@ -8,12 +8,12 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
 import NotFound from "./pages/NotFound";
-import useAuth from "./context/useAuth";
 import RequireAuth from "./components/RequireAuth";
+import { useSelector } from "react-redux";
 
 const App = () => {
   const location = useLocation();
-  const { auth } = useAuth();
+  const auth = useSelector((state) => state.auth);
   const path = location.pathname.split("/")[1];
   const allowedUrls = ["", "signup", "login", "home"];
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDrag } from "react-dnd";
-import { MdDeleteOutline } from "react-icons/md";
+import { TiDelete } from "react-icons/ti";
 import NoteForm from "./NoteForm";
 import PromptClamp from "../PromptClamp";
 
@@ -24,23 +24,25 @@ const NoteItem = ({ note, onDelete, onEdit }) => {
   }
 
   return (
-    <div className="w-63 -ml-2 wrap-break-word">
+    <div className="w-68 ">
       <li
         ref={drag}
         onClick={() => setEditing(true)}
-        className={`relative p-2 rounded-lg bg-white cursor-pointer ${
+        className={`relative p-2  rounded-lg bg-white cursor-pointer ${
           isDragging ? "opacity-50" : ""
         }`}
       >
-        <div className="text-gray-900">{note.title}</div>
-        <PromptClamp text={note.body} />
-        <MdDeleteOutline
-          className="text-red-500 text-xl absolute right-2 top-5"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(note._id);
-          }}
-        />
+        <div className="wrap-break-word whitespace-pre-wrap ">
+          <div className="text-gray-900 font-medium">{note.title}</div>
+          <PromptClamp text={note.body} />
+          <TiDelete
+            className="text-blue-600 size-6 text-xl absolute right-2 top-5"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(note._id);
+            }}
+          />
+        </div>
       </li>
     </div>
   );

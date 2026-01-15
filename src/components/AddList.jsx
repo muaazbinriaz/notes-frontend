@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useAddListMutation } from "../features/lists/ListApi";
+import { toast } from "react-toastify";
 
 const AddList = () => {
   const [addList] = useAddListMutation();
@@ -10,6 +11,7 @@ const AddList = () => {
   const handleAdd = () => {
     if (!title.trim()) return;
     addList(title.trim());
+    toast.success("New list added successfully!");
     setTitle("");
     setIsOpen(false);
   };
@@ -17,7 +19,7 @@ const AddList = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="w-72 h-12 flex items-center justify-center cursor-pointer bg-gray-200 rounded-md hover:bg-gray-300"
+        className="w-72 shrink-0 h-12 flex items-center justify-center cursor-pointer bg-gray-200 rounded-md hover:bg-gray-300"
       >
         + Add new list
       </div>
@@ -32,7 +34,7 @@ const AddList = () => {
         placeholder="Enter list title"
         className="w-full p-1 rounded border"
       />
-      <div className="flex gap-2 mt-2">
+      <div className="flex gap-2 mt-2 shrink-0 w-72">
         <button
           className="bg-blue-500 text-white px-2 py-1 rounded"
           onClick={handleAdd}

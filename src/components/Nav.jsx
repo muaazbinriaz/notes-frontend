@@ -1,15 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import useAuth from "../context/useAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { useLogoutMutation } from "../features/lists/authApi";
+import { logout as logoutAction } from "../features/auth/authSlice";
+import { listApi } from "../features/lists/ListApi";
+import { noteApi } from "../features/lists/noteApi";
 
 const Nav = () => {
-  const { auth, logout } = useAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [logoutApi] = useLogoutMutation();
+  const auth = useSelector((state) => state.auth);
   const dropDown = useRef(null);
   const [open, setOpen] = useState(false);
 
   const firstLetter = auth?.user?.name
-    ? auth?.user.name.charAt(0).toUpperCase()
+    ? auth.user.name.charAt(0).toUpperCase()
     : "?";
 
   const closeDropdown = (e) => {
@@ -18,14 +24,23 @@ const Nav = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      await logoutApi();
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+    dispatch(logoutAction());
+    localStorage.removeItem("auth");
+    dispatch(listApi.util.resetApiState());
+    dispatch(noteApi.util.resetApiState());
     setOpen(false);
     navigate("/");
   };
 
   useEffect(() => {
     document.addEventListener("mousedown", closeDropdown);
+    return () => document.removeEventListener("mousedown", closeDropdown);
   }, []);
 
   return (
