@@ -49,11 +49,22 @@ const ListColumn = ({ list }) => {
   };
 
   const handleDeleteNote = async (id) => {
-    try {
-      await deleteNote(id).unwrap();
-      toast.success("Note deleted successfully!");
-    } catch (err) {
-      toast.error("Failed to delete note.");
+    const result = await Swal.fire({
+      title: "Delete this note?",
+      text: "This note will be deleted from this list!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+    if (result.isConfirmed) {
+      try {
+        await deleteNote(id).unwrap();
+        toast.success("Note deleted successfully!");
+      } catch (err) {
+        toast.error("Failed to delete note.");
+      }
     }
   };
 
@@ -93,11 +104,11 @@ const ListColumn = ({ list }) => {
   return (
     <div
       ref={drop}
-      className={`bg-[#78afcb] max-w-72 w-full shrink-0 pb-3 rounded-xl ${
+      className={`bg-[#78afcb] max-w-72 w-full shrink-0 pb-3 rounded-xl max-h-[75vh] ${
         isOver ? "bg-blue-400" : ""
       }`}
     >
-      <div className="p-4 flex justify-between">
+      <div className="p-4 flex justify-between ">
         <p className="pl-2 text-[17px] font-semibold text-[#012a3e]">
           {list.title}
         </p>
@@ -107,36 +118,37 @@ const ListColumn = ({ list }) => {
       </div>
 
       {listNotes.length > 0 ? (
-        <ul className="w-68  mx-auto flex flex-col gap-2 ">
-          {listNotes.map((note) => (
-            <NoteItem
-              key={note._id}
-              note={note}
-              onDelete={() => handleDeleteNote(note._id)}
-              onEdit={(updated) => handleEditNote(note._id, updated)}
-            />
-          ))}
-        </ul>
+        <div className="overflow-scroll max-h-[55vh] scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <ul className="w-68 mx-auto flex flex-col gap-2 ">
+            {listNotes.map((note) => (
+              <NoteItem
+                key={note._id}
+                note={note}
+                onDelete={() => handleDeleteNote(note._id)}
+                onEdit={(updated) => handleEditNote(note._id, updated)}
+              />
+            ))}
+            {isBoxOpen && (
+              <NoteForm
+                onSubmit={(note) => handleAddNote(note)}
+                onClose={() => setIsBoxOpen(false)}
+              />
+            )}
+          </ul>
+        </div>
       ) : (
         <p className="text-white px-4 text-lg pb-1 italic">No notes</p>
       )}
 
-      {isBoxOpen ? (
-        <NoteForm
-          onSubmit={(note) => handleAddNote(note)}
-          onClose={() => setIsBoxOpen(false)}
-        />
-      ) : (
-        <div
-          onClick={() => setIsBoxOpen(true)}
-          className="w-68 pl-2 py-1.5 mx-auto mt-5 flex items-center gap-2 hover:bg-[#5b97b5] rounded-lg cursor-pointer"
-        >
-          <span className="text-[20px]">
-            <IoMdAdd className="text-[#012131]" />
-          </span>
-          <span className="font-medium text-[#012a3e]">Add a card</span>
-        </div>
-      )}
+      <div
+        onClick={() => setIsBoxOpen(true)}
+        className="w-68 pl-2 py-1.5 mx-auto mt-5 flex items-center gap-2 hover:bg-[#5b97b5] rounded-lg cursor-pointer"
+      >
+        <span className="text-[20px]">
+          <IoMdAdd className="text-[#012131]" />
+        </span>
+        <span className="font-medium text-[#012a3e]">Add a card</span>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
 
@@ -9,6 +9,7 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
   const [body, setBody] = useState("");
   const [titleCount, setTitleCount] = useState(0);
   const [bodyCount, setBodyCount] = useState(0);
+
   useEffect(() => {
     if (initialData) {
       setTitle(initialData.title);
@@ -58,7 +59,7 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
         </span>
       </div>
 
-      <div className=" pt-2 flex ">
+      <div className=" pt-2 flex">
         <button
           className="bg-blue-500 hover:bg-[#0a7db7] duration-300 font-semibold text-white py-1 px-4 rounded-md mr-2"
           onClick={submit}
