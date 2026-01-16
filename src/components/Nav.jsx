@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../features/lists/authApi";
 import { logout as logoutAction } from "../features/auth/authSlice";
-import { listApi } from "../features/lists/ListApi";
+import { listApi } from "../features/lists/listApi";
 import { noteApi } from "../features/lists/noteApi";
 
 const Nav = () => {

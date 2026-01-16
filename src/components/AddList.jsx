@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
-import { useAddListMutation } from "../features/lists/ListApi";
+import { useAddListMutation } from "../features/lists/listApi";
 import { toast } from "react-toastify";
 
 const AddList = () => {

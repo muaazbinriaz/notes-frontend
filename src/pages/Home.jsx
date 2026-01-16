@@ -1,6 +1,6 @@
 import ListColumn from "../components/columns/ListColumn";
 import AddList from "../components/AddList";
-import { useGetListsQuery } from "../features/lists/ListApi";
+import { useGetListsQuery } from "../features/lists/listApi";
 import RoundedLoader from "../components/RoundedLoader";
 
 const Home = () => {
