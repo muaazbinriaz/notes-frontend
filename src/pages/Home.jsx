@@ -2,7 +2,7 @@ import ListColumn from "../components/columns/ListColumn";
 import AddList from "../components/AddList";
 import { useGetListsQuery } from "../features/lists/listApi";
 import RoundedLoader from "../components/RoundedLoader";
-// update url
+
 const Home = () => {
   const { data: lists, isLoading, isError, error } = useGetListsQuery();
   if (isLoading) return <RoundedLoader />;
