@@ -60,7 +60,7 @@ const Nav = () => {
           {open && (
             <div
               ref={dropDown}
-              className="absolute right-0 mt-2 w-65 bg-white border border-gray-200 rounded-md shadow-md"
+              className="absolute right-0 mt-2 w-65 bg-white border border-gray-200 rounded-md shadow-md z-10"
             >
               <div className="p-4">
                 <p className="text-gray-700">{auth?.user?.name}</p>

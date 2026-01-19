@@ -9,7 +9,7 @@ const Home = () => {
   if (isError)
     return <p>Error: {error?.data?.message || "Something went wrong"}</p>;
   return (
-    <div className="my-10 mx-3 flex gap-6 items-start overflow-x-scroll scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] whitespace-nowrap">
+    <div className="flex items-start gap-6 p-4 h-[calc(100vh-100px)] overflow-x-auto overflow-y-hidden scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {lists.map((list) => (
         <ListColumn key={list._id} list={list} />
       ))}

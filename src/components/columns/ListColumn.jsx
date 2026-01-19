@@ -43,6 +43,7 @@ const ListColumn = ({ list }) => {
     try {
       await addNote({ ...note, listId: list._id }).unwrap();
       toast.success("Note added successfully!");
+      setIsBoxOpen(false);
     } catch (err) {
       toast.error("Failed to add note.");
     }
@@ -118,7 +119,7 @@ const ListColumn = ({ list }) => {
       </div>
 
       {listNotes.length > 0 ? (
-        <div className="overflow-scroll max-h-[60vh] scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="overflow-scroll max-h-[calc(100vh-260px)] scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <ul className="max-w-68 w-full mx-auto flex flex-col gap-2 ">
             {listNotes.map((note) => (
               <NoteItem
@@ -129,17 +130,28 @@ const ListColumn = ({ list }) => {
               />
             ))}
           </ul>
+
+          {isBoxOpen && (
+            <NoteForm
+              onSubmit={(note) => handleAddNote(note)}
+              onClose={() => setIsBoxOpen(false)}
+            />
+          )}
         </div>
       ) : (
-        <p className="text-white px-4 text-lg pb-1 italic">No notes</p>
+        <div className="px-4">
+          <p className="text-white text-lg italic pb-1">No notes</p>
+
+          {isBoxOpen && (
+            <NoteForm
+              onSubmit={(note) => handleAddNote(note)}
+              onClose={() => setIsBoxOpen(false)}
+            />
+          )}
+        </div>
       )}
 
-      {isBoxOpen ? (
-        <NoteForm
-          onSubmit={(note) => handleAddNote(note)}
-          onClose={() => setIsBoxOpen(false)}
-        />
-      ) : (
+      {!isBoxOpen && (
         <div
           onClick={() => setIsBoxOpen(true)}
           className="w-68 pl-2 py-1.5 mx-auto mt-5 flex items-center gap-2 hover:bg-[#5b97b5] rounded-lg cursor-pointer"

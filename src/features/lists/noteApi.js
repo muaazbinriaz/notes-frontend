@@ -49,7 +49,7 @@ export const noteApi = createApi({
           noteApi.util.updateQueryData("getNotes", undefined, (draft) => {
             const note = draft.find((n) => n._id === noteId);
             if (note) note.listId = listId;
-          })
+          }),
         );
         try {
           await queryFulfilled;
