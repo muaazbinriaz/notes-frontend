@@ -15,6 +15,7 @@ import {
   useMoveNoteMutation,
 } from "../../features/lists/noteApi";
 import { useDeleteListMutation } from "../../features/lists/listApi";
+import RoundedLoader from "../RoundedLoader";
 
 const ListColumn = ({ list }) => {
   const { data: notes } = useGetNotesQuery();
@@ -24,28 +25,40 @@ const ListColumn = ({ list }) => {
   const [moveNote] = useMoveNoteMutation();
   const [deleteList] = useDeleteListMutation();
   const [isBoxOpen, setIsBoxOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const listNotes = notes ? notes.filter((n) => n.listId === list._id) : [];
+  const listNotes = notes
+    ? notes
+        .filter((n) => n.listId === list._id)
+        .sort((a, b) => a.position - b.position)
+    : [];
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "Note",
     drop: async (item) => {
       try {
-        await moveNote({ noteId: item._id, listId: list._id }).unwrap();
+        await moveNote({
+          noteId: item._id,
+          listId: list._id,
+          position: item.position,
+        }).unwrap();
       } catch (err) {
-        toast.error("Failed to move note.");
+        console.log("note");
       }
     },
     collect: (monitor) => ({ isOver: monitor.isOver() }),
   }));
 
   const handleAddNote = async (note) => {
+    setLoading(true);
     try {
       await addNote({ ...note, listId: list._id }).unwrap();
-      toast.success("Note added successfully!");
       setIsBoxOpen(false);
+      toast.success("Note added successfully!");
     } catch (err) {
       toast.error("Failed to add note.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,21 +73,27 @@ const ListColumn = ({ list }) => {
       confirmButtonText: "Yes, delete it!",
     });
     if (result.isConfirmed) {
+      setLoading(true);
       try {
         await deleteNote(id).unwrap();
         toast.success("Note deleted successfully!");
       } catch (err) {
         toast.error("Failed to delete note.");
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const handleEditNote = async (id, updated) => {
+    setLoading(true);
     try {
       await editNote({ id, updateNote: updated }).unwrap();
       toast.success("Note updated successfully!");
     } catch (err) {
       toast.error("Failed to update note.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,6 +108,7 @@ const ListColumn = ({ list }) => {
       confirmButtonText: "Yes, delete it!",
     });
     if (result.isConfirmed) {
+      setLoading(true);
       try {
         await deleteList(list._id).unwrap();
         Swal.fire({
@@ -98,6 +118,8 @@ const ListColumn = ({ list }) => {
         });
       } catch (err) {
         toast.error("Failed to delete list", err);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -114,17 +136,22 @@ const ListColumn = ({ list }) => {
           {list.title}
         </p>
         <button onClick={handleDeleteList} className="cursor-pointer pr-2">
-          <RiDeleteBin6Line className="size-5 text-white" />
+          <RiDeleteBin6Line className="size-5 text-white hover:text-red-600 duration-200" />
         </button>
       </div>
 
-      {listNotes.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-32">
+          <RoundedLoader />
+        </div>
+      ) : listNotes.length > 0 ? (
         <div className="overflow-scroll max-h-[calc(100vh-260px)] scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <ul className="max-w-68 w-full mx-auto flex flex-col gap-2 ">
-            {listNotes.map((note) => (
+            {listNotes.map((note, index) => (
               <NoteItem
                 key={note._id}
                 note={note}
+                index={index}
                 onDelete={() => handleDeleteNote(note._id)}
                 onEdit={(updated) => handleEditNote(note._id, updated)}
               />
@@ -151,7 +178,7 @@ const ListColumn = ({ list }) => {
         </div>
       )}
 
-      {!isBoxOpen && (
+      {!isBoxOpen && !loading && (
         <div
           onClick={() => setIsBoxOpen(true)}
           className="w-68 pl-2 py-1.5 mx-auto mt-5 flex items-center gap-2 hover:bg-[#5b97b5] rounded-lg cursor-pointer"

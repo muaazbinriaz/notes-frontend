@@ -16,7 +16,7 @@ export const noteApi = createApi({
       query: (note) => ({
         url: "/notes/insert",
         method: "POST",
-        body: note,
+        body: { ...note, position: note.position },
       }),
       invalidatesTags: ["Notes"],
     }),
@@ -39,16 +39,22 @@ export const noteApi = createApi({
     }),
 
     moveNote: builder.mutation({
-      query: ({ noteId, listId }) => ({
+      query: ({ noteId, listId, position }) => ({
         url: `notes/move/${noteId}`,
         method: "PUT",
-        body: { listId },
+        body: { listId, position },
       }),
-      async onQueryStarted({ noteId, listId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(
+        { noteId, listId, position },
+        { dispatch, queryFulfilled },
+      ) {
         const patch = dispatch(
           noteApi.util.updateQueryData("getNotes", undefined, (draft) => {
             const note = draft.find((n) => n._id === noteId);
-            if (note) note.listId = listId;
+            if (note) {
+              note.listId = listId;
+              note.position = position;
+            }
           }),
         );
         try {

@@ -1,18 +1,29 @@
-import { useState } from "react";
-import { useDrag } from "react-dnd";
+import { useRef, useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
 import { TiDelete } from "react-icons/ti";
 import NoteForm from "./NoteForm";
 import PromptClamp from "../PromptClamp";
 
-const NoteItem = ({ note, onDelete, onEdit }) => {
+const NoteItem = ({ note, index, onDelete, onEdit }) => {
+  const ref = useRef(null);
   const [editing, setEditing] = useState(false);
-
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "Note",
-    item: { _id: note._id },
+    item: { _id: note._id, position: index },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   }));
 
+  const [, drop] = useDrop({
+    accept: "Note",
+    hover(item) {
+      if (!ref.current) return;
+      const dragIndex = item.position;
+      const hoverIndex = index;
+      if (dragIndex === hoverIndex) return;
+      item.position = hoverIndex;
+    },
+  });
+  drag(drop(ref));
   if (editing) {
     return (
       <NoteForm
@@ -26,7 +37,7 @@ const NoteItem = ({ note, onDelete, onEdit }) => {
   return (
     <div className="w-68 ">
       <li
-        ref={drag}
+        ref={ref}
         onClick={() => setEditing(true)}
         className={`relative p-2  rounded-lg bg-white cursor-pointer ${
           isDragging ? "opacity-50" : ""
@@ -36,7 +47,7 @@ const NoteItem = ({ note, onDelete, onEdit }) => {
           <div className="text-gray-900 font-medium">{note.title}</div>
           <PromptClamp text={note.body} />
           <TiDelete
-            className="text-blue-600 size-6 text-xl absolute right-2 top-5"
+            className="text-blue-600 size-6 text-xl absolute right-2 top-5 hover:text-red-500 duration-200"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(note._id);

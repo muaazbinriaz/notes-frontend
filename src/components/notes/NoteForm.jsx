@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
-
 const TITLE_LIMIT = 60;
 const BODY_LIMIT = 500;
 const NoteForm = ({ initialData, onSubmit, onClose }) => {
