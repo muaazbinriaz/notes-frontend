@@ -67,7 +67,7 @@ const Nav = () => {
                 <p className="text-gray-500">{auth?.user?.email}</p>
                 <button
                   onClick={handleLogout}
-                  className="mt-2 bg-[#407b98] hover:bg-[#4f8aa7] transition duration-300 text-white px-3 py-1 rounded-md"
+                  className="mt-2 cursor-pointer bg-[#407b98] hover:bg-[#4f8aa7] transition duration-300 text-white px-3 py-1 rounded-md"
                 >
                   Logout
                 </button>
