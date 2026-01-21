@@ -13,10 +13,10 @@ export const listApi = createApi({
     }),
 
     addList: builder.mutation({
-      query: (title) => ({
+      query: ({ title, position }) => ({
         url: "/lists",
         method: "POST",
-        body: { title },
+        body: { title, position },
       }),
       invalidatesTags: ["Lists"],
     }),
@@ -28,8 +28,20 @@ export const listApi = createApi({
       }),
       invalidatesTags: ["Lists"],
     }),
+
+    updateListOrder: builder.mutation({
+      query: (lists) => ({
+        url: "/lists/reorder",
+        method: "PUT",
+        body: { lists },
+      }),
+    }),
   }),
 });
 
-export const { useGetListsQuery, useAddListMutation, useDeleteListMutation } =
-  listApi;
+export const {
+  useGetListsQuery,
+  useAddListMutation,
+  useDeleteListMutation,
+  useUpdateListOrderMutation,
+} = listApi;

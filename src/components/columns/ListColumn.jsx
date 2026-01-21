@@ -1,5 +1,5 @@
-import { useDrop } from "react-dnd";
-import { useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import { useRef, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { toast } from "react-toastify";
 import NoteItem from "../notes/NoteItem";
@@ -17,7 +17,7 @@ import {
 import { useDeleteListMutation } from "../../features/lists/listApi";
 import RoundedLoader from "../RoundedLoader";
 
-const ListColumn = ({ list }) => {
+const ListColumn = ({ list, index, moveList }) => {
   const { data: notes } = useGetNotesQuery();
   const [addNote] = useAddNoteMutation();
   const [deleteNote] = useDeleteNoteMutation();
@@ -33,6 +33,7 @@ const ListColumn = ({ list }) => {
   const listNotesRaw = Array.isArray(notes)
     ? notes.filter((note) => note.listId === list._id)
     : [];
+  const ref = useRef(null);
 
   const filteredNotes = Array.isArray(listNotesRaw)
     ? listNotesRaw.filter((note) => {
@@ -58,21 +59,61 @@ const ListColumn = ({ list }) => {
     return a.position - b.position;
   });
 
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: "Note",
-    drop: async (item) => {
-      try {
-        await moveNote({
-          noteId: item._id,
-          listId: list._id,
-          position: item.position,
-        }).unwrap();
-      } catch (err) {
-        console.log("note");
-      }
-    },
-    collect: (monitor) => ({ isOver: monitor.isOver() }),
-  }));
+  const [{ isDragging }, dragRef] = useDrag(
+    () => ({
+      type: "LIST",
+      item: { id: list._id, index },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [index, list._id],
+  );
+
+  const [, dropRef] = useDrop(
+    () => ({
+      accept: "LIST",
+      hover: (item, monitor) => {
+        if (!ref.current) return;
+        const dragIndex = item.index;
+        const hoverIndex = index;
+        if (dragIndex === hoverIndex) return;
+        const hoverBoundingRect = ref.current.getBoundingClientRect();
+        const hoverMiddleX =
+          (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+        const clientOffset = monitor.getClientOffset();
+        const hoverClientX = clientOffset.x - hoverBoundingRect.left;
+        if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
+          return;
+        }
+        if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
+          return;
+        }
+        moveList(dragIndex, hoverIndex);
+        item.index = hoverIndex;
+      },
+    }),
+    [index, moveList],
+  );
+
+  const [{ isOver }, noteDropRef] = useDrop(
+    () => ({
+      accept: "Note",
+      drop: async (item) => {
+        try {
+          await moveNote({
+            noteId: item._id,
+            listId: list._id,
+            position: item.position,
+          }).unwrap();
+        } catch (err) {
+          console.error("Failed to move note:", err);
+        }
+      },
+      collect: (monitor) => ({ isOver: monitor.isOver() }),
+    }),
+    [list._id, moveNote],
+  );
 
   const handleAddNote = async (note) => {
     setLoading(true);
@@ -146,7 +187,7 @@ const ListColumn = ({ list }) => {
           icon: "success",
         });
       } catch (err) {
-        toast.error("Failed to delete list", err);
+        toast.error("Failed to delete list");
       } finally {
         setLoading(false);
       }
@@ -155,17 +196,20 @@ const ListColumn = ({ list }) => {
 
   return (
     <div
-      ref={drop}
-      className={`bg-[#78afcb] max-w-72 w-full shrink-0 pb-3 rounded-xl ${
+      ref={(node) => {
+        ref.current = node;
+        dragRef(dropRef(noteDropRef(node)));
+      }}
+      className={`bg-[#78afcb] max-w-72 w-full shrink-0 pb-3 rounded-xl transition-all duration-200 ${
         isOver ? "bg-blue-400" : ""
-      }`}
+      } ${isDragging ? "opacity-50 cursor-grabbing" : "opacity-100 cursor-grab"}`}
     >
       <div className="p-4 flex justify-between ">
         <p className="pl-2 text-[17px] font-semibold text-[#012a3e]">
           {list.title}
         </p>
-        <div>
-          <button onClick={handleEllipse} className="cursor-pointer pr-2">
+        <div className="flex gap-2">
+          <button onClick={handleEllipse} className="cursor-pointer">
             <HiEllipsisHorizontal className="size-6 text-white" />
           </button>
           <button onClick={handleDeleteList} className="cursor-pointer">
@@ -207,11 +251,11 @@ const ListColumn = ({ list }) => {
             </div>
           )}
           <ul className="max-w-68 w-full mx-auto flex flex-col gap-2">
-            {sortedNotes.map((note, index) => (
+            {sortedNotes.map((note, noteIndex) => (
               <NoteItem
                 key={note._id}
                 note={note}
-                index={index}
+                index={noteIndex}
                 onDelete={() => handleDeleteNote(note._id)}
                 onEdit={(updated) => handleEditNote(note._id, updated)}
               />

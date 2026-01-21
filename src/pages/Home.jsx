@@ -1,19 +1,62 @@
 import ListColumn from "../components/columns/ListColumn";
 import AddList from "../components/AddList";
-import { useGetListsQuery } from "../features/lists/listApi";
+import {
+  useGetListsQuery,
+  useUpdateListOrderMutation,
+} from "../features/lists/listApi";
 import RoundedLoader from "../components/RoundedLoader";
+import { useEffect, useState, useCallback } from "react";
 
 const Home = () => {
   const { data: lists, isLoading, isError, error } = useGetListsQuery();
-  if (isLoading) return <RoundedLoader />;
-  if (isError)
-    return <p>Error: {error?.data?.message || "Something went wrong"}</p>;
+  const [updateListOrder] = useUpdateListOrderMutation();
+  const [localLists, setLocalLists] = useState([]);
+
+  useEffect(() => {
+    if (lists && lists.length > 0) {
+      setLocalLists(lists);
+    }
+  }, [lists]);
+
+  const moveList = useCallback(
+    (fromIndex, toIndex) => {
+      if (fromIndex === toIndex) return;
+
+      setLocalLists((prevLists) => {
+        const updated = [...prevLists];
+        const [moved] = updated.splice(fromIndex, 1);
+        updated.splice(toIndex, 0, moved);
+        updateListOrder(updated.map((l, i) => ({ id: l._id, position: i })));
+        return updated;
+      });
+    },
+    [updateListOrder],
+  );
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-100px)]">
+        <RoundedLoader />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-100px)]">
+        <p className="text-red-500 text-lg">
+          Error: {error?.data?.message || "Something went wrong"}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-start gap-6 p-4 h-[calc(100vh-100px)] overflow-x-auto overflow-y-hidden scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      {lists.map((list) => (
-        <ListColumn key={list._id} list={list} />
+      {localLists.map((list, i) => (
+        <ListColumn key={list._id} list={list} index={i} moveList={moveList} />
       ))}
-      <AddList />
+      <AddList listCount={localLists.length} />
     </div>
   );
 };

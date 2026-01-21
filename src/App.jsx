@@ -1,55 +1,44 @@
-import Home from "./pages/Home";
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
-import Nav from "./components/Nav";
-
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import Nav from "./components/Nav";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-
 import NotFound from "./pages/NotFound";
 import RequireAuth from "./components/RequireAuth";
-import { useSelector } from "react-redux";
 
 const App = () => {
-  const location = useLocation();
   const auth = useSelector((state) => state.auth);
-  const path = location.pathname.split("/")[1];
-  const allowedUrls = ["", "signup", "login", "home"];
 
   return (
     <>
-      {allowedUrls.includes(path) && <Nav />}
-      <Routes>
-        <Route
-          path="/"
-          element={auth?.token ? <Navigate to="/home" /> : <Login />}
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+      <DndProvider backend={HTML5Backend}>
+        <Nav />
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate to={auth?.token ? "/home" : "/login"} />}
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/home"
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </DndProvider>
 
-        <Route
-          path="/home"
-          element={
-            <RequireAuth>
-              <Home />
-            </RequireAuth>
-          }
-        />
-
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer position="top-right" autoClose={500} />
     </>
   );
 };
