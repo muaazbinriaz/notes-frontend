@@ -53,7 +53,7 @@ const Nav = () => {
         <div>
           <button
             onClick={() => setOpen(!open)}
-            className="w-10 h-10 rounded-full bg-[#78AFCB] text-white font-bold flex items-center justify-center"
+            className="w-10 h-10 cursor-pointer rounded-full bg-[#78AFCB] hover:bg-[#5faacf] duration-200 text-white font-bold flex items-center justify-center"
           >
             {firstLetter}
           </button>
