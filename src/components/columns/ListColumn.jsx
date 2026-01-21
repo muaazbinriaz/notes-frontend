@@ -1,5 +1,5 @@
 import { useDrag, useDrop } from "react-dnd";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { toast } from "react-toastify";
 import NoteItem from "../notes/NoteItem";
@@ -34,6 +34,7 @@ const ListColumn = ({ list, index, moveList }) => {
     ? notes.filter((note) => note.listId === list._id)
     : [];
   const ref = useRef(null);
+  const panelRef = useRef(null);
 
   const filteredNotes = Array.isArray(listNotesRaw)
     ? listNotesRaw.filter((note) => {
@@ -167,6 +168,23 @@ const ListColumn = ({ list, index, moveList }) => {
     setIsPanelOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (event.target.closest(".ellipse-button")) {
+        return;
+      }
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        setIsPanelOpen(false);
+      }
+    };
+    if (isPanelOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isPanelOpen]);
+
   const handleDeleteList = async () => {
     const result = await Swal.fire({
       title: "Delete this list?",
@@ -209,7 +227,10 @@ const ListColumn = ({ list, index, moveList }) => {
           {list.title}
         </p>
         <div className="flex gap-2">
-          <button onClick={handleEllipse} className="cursor-pointer">
+          <button
+            onClick={handleEllipse}
+            className="cursor-pointer ellipse-button"
+          >
             <HiEllipsisHorizontal className="size-6 text-white" />
           </button>
           <button onClick={handleDeleteList} className="cursor-pointer">
@@ -222,10 +243,10 @@ const ListColumn = ({ list, index, moveList }) => {
         <div className="flex justify-center items-center h-32">
           <RoundedLoader />
         </div>
-      ) : sortedNotes.length > 0 ? (
+      ) : (
         <div className="overflow-scroll max-h-[calc(100vh-260px)] scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {isPanelOpen && (
-            <div className="px-2 pb-3 sticky top-0 z-10">
+            <div ref={panelRef} className="px-2 pb-3 sticky top-0 z-10">
               <div className="bg-[#6aa0bd] rounded-lg p-3 flex flex-col gap-3">
                 <div className="flex items-center gap-3"></div>
                 <div className="flex flex-col gap-3">
@@ -250,28 +271,30 @@ const ListColumn = ({ list, index, moveList }) => {
               </div>
             </div>
           )}
-          <ul className="max-w-68 w-full mx-auto flex flex-col gap-2">
-            {sortedNotes.map((note, noteIndex) => (
-              <NoteItem
-                key={note._id}
-                note={note}
-                index={noteIndex}
-                onDelete={() => handleDeleteNote(note._id)}
-                onEdit={(updated) => handleEditNote(note._id, updated)}
-              />
-            ))}
-          </ul>
 
-          {isBoxOpen && (
-            <NoteForm
-              onSubmit={(note) => handleAddNote(note)}
-              onClose={() => setIsBoxOpen(false)}
-            />
+          {sortedNotes.length > 0 ? (
+            <ul className="max-w-68 w-full mx-auto flex flex-col gap-2">
+              {sortedNotes.map((note, noteIndex) => (
+                <NoteItem
+                  key={note._id}
+                  note={note}
+                  index={noteIndex}
+                  onDelete={() => handleDeleteNote(note._id)}
+                  onEdit={(updated) => handleEditNote(note._id, updated)}
+                />
+              ))}
+            </ul>
+          ) : listNotesRaw.length > 0 ? (
+            <div className="px-4">
+              <p className="text-white text-lg italic pb-1">
+                No notes match your filter
+              </p>
+            </div>
+          ) : (
+            <div className="px-4">
+              <p className="text-white text-lg italic pb-1">No notes</p>
+            </div>
           )}
-        </div>
-      ) : (
-        <div className="px-4">
-          <p className="text-white text-lg italic pb-1">No notes</p>
 
           {isBoxOpen && (
             <NoteForm

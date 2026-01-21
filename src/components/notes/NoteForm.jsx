@@ -60,13 +60,13 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
 
       <div className=" pt-2 flex">
         <button
-          className="bg-blue-500 hover:bg-[#0a7db7] duration-300 font-semibold text-white py-1 px-4 rounded-md mr-2"
+          className="bg-blue-500 hover:bg-[#0a7db7] duration-300 cursor-pointer font-semibold text-white py-1 px-4 rounded-md mr-2"
           onClick={submit}
         >
           {initialData ? "Save" : "Add card"}
         </button>
         <button
-          className="text-xl text-[#01273a] hover:bg-[#529dc2] p-2 rounded"
+          className="text-xl text-[#01273a] cursor-pointer hover:bg-[#529dc2] p-2 rounded"
           onClick={onClose}
         >
           <RxCross2 />
