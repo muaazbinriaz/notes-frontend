@@ -17,26 +17,26 @@ const App = () => {
 
   return (
     <>
-      <DndProvider backend={HTML5Backend}>
-        <Nav />
-        <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={auth?.token ? "/home" : "/login"} />}
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/home"
-            element={
-              <RequireAuth>
+      <Nav />
+      <Routes>
+        <Route
+          path="/"
+          element={<Navigate to={auth?.token ? "/home" : "/login"} />}
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/home"
+          element={
+            <RequireAuth>
+              <DndProvider backend={HTML5Backend}>
                 <Home />
-              </RequireAuth>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </DndProvider>
+              </DndProvider>
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
 
       <ToastContainer position="top-right" autoClose={500} />
     </>
