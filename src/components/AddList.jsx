@@ -30,19 +30,23 @@ const AddList = ({ listCount }) => {
       <input
         type="text"
         value={title}
+        autoFocus
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Enter list title"
         className="w-full p-1 rounded border"
       />
       <div className="flex gap-2 mt-2 shrink-0 w-72">
         <button
-          className="bg-blue-500 text-white px-2 py-1 rounded"
+          className="bg-blue-500 cursor-pointer hover:bg-blue-600 duration-200 text-white px-3 py-1 rounded"
           onClick={handleAdd}
         >
           Add List
         </button>
-        <button className="text-gray-600" onClick={() => setIsOpen(false)}>
-          <RxCross2 />
+        <button
+          className="text-gray-600 cursor-pointer hover:bg-gray-300 w-8 rounded flex justify-center items-center"
+          onClick={() => setIsOpen(false)}
+        >
+          <RxCross2 className="size-5" />
         </button>
       </div>
     </div>
