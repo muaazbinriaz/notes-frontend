@@ -13,6 +13,7 @@ import {
   useEditNoteMutation,
   useGetNotesQuery,
   useMoveNoteMutation,
+  useUploadImageMutation,
 } from "../../features/lists/noteApi";
 import { useDeleteListMutation } from "../../features/lists/listApi";
 import RoundedLoader from "../RoundedLoader";
@@ -24,6 +25,7 @@ const ListColumn = ({ list, index, moveList }) => {
   const [editNote] = useEditNoteMutation();
   const [moveNote] = useMoveNoteMutation();
   const [deleteList] = useDeleteListMutation();
+  const [uploadImage] = useUploadImageMutation();
   const [isBoxOpen, setIsBoxOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -155,7 +157,16 @@ const ListColumn = ({ list, index, moveList }) => {
   const handleEditNote = async (id, updated) => {
     setLoading(true);
     try {
-      await editNote({ id, updateNote: updated }).unwrap();
+      await editNote({
+        id,
+        updateNote: { title: updated.title, body: updated.body },
+      }).unwrap();
+      if (updated.imageFile) {
+        await uploadImage({
+          noteId: id,
+          imageFile: updated.imageFile,
+        }).unwrap();
+      }
       toast.success("Note updated successfully!");
     } catch (err) {
       toast.error("Failed to update note.");

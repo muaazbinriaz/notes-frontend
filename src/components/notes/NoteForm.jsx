@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
+import { FaPaperclip } from "react-icons/fa";
+
 const TITLE_LIMIT = 60;
 const BODY_LIMIT = 500;
 const NoteForm = ({ initialData, onSubmit, onClose }) => {
@@ -8,6 +10,9 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
   const [body, setBody] = useState("");
   const [titleCount, setTitleCount] = useState(0);
   const [bodyCount, setBodyCount] = useState(0);
+  const fileInputRef = useRef(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     if (initialData) {
@@ -20,8 +25,16 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
   const submit = () => {
     if (!title.trim()) return toast.error("Title is required");
     if (!body.trim()) return toast.error("Body is required");
-    onSubmit({ title, body });
+    onSubmit({ title, body, imageFile });
     onClose();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
   };
 
   return (
@@ -41,7 +54,6 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
           {titleCount} / {TITLE_LIMIT}
         </span>
       </div>
-
       <div className="relative">
         <textarea
           className="bg-white w-68 p-2 rounded-lg  py-2.5 mt-2 resize-none outline-none ring-1 ring-amber-300"
@@ -57,20 +69,44 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
           {bodyCount} / {BODY_LIMIT}
         </span>
       </div>
+      <div className=" pt-2 flex flex-col-reverse">
+        <div className="flex justify-center">
+          {initialData && (
+            <button
+              className=" text-lg text-[#01273a] cursor-pointer p-2 rounded"
+              onClick={() => fileInputRef.current.click()}
+            >
+              <FaPaperclip />
+            </button>
+          )}
 
-      <div className=" pt-2 flex">
-        <button
-          className="bg-blue-500 hover:bg-[#0a7db7] duration-300 cursor-pointer font-semibold text-white py-1 px-4 rounded-md mr-2"
-          onClick={submit}
-        >
-          {initialData ? "Save" : "Add card"}
-        </button>
-        <button
-          className="text-xl text-[#01273a] cursor-pointer hover:bg-[#529dc2] p-2 rounded"
-          onClick={onClose}
-        >
-          <RxCross2 />
-        </button>
+          <button
+            className="bg-blue-500 hover:bg-[#0a7db7] duration-300 cursor-pointer font-semibold text-white py-1 px-4 rounded-md mr-2"
+            onClick={submit}
+          >
+            {initialData ? "Save" : "Add card"}
+          </button>
+
+          <button
+            className="text-xl text-[#01273a] cursor-pointer hover:bg-[#529dc2] p-2 rounded"
+            onClick={onClose}
+          >
+            <RxCross2 />
+          </button>
+        </div>
+        {previewUrl && (
+          <img
+            src={previewUrl}
+            alt="preview"
+            className="w-68 rounded-lg mb-2"
+          />
+        )}
+        <input
+          type="file"
+          hidden
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
       </div>
     </div>
   );

@@ -38,6 +38,19 @@ export const noteApi = createApi({
       invalidatesTags: ["Notes"],
     }),
 
+    uploadImage: builder.mutation({
+      query: ({ noteId, imageFile }) => {
+        const formData = new FormData();
+        formData.append("picture", imageFile);
+        return {
+          url: `notes/uploadImage/${noteId}`,
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["Notes"],
+    }),
+
     moveNote: builder.mutation({
       query: ({ noteId, listId, position }) => ({
         url: `notes/move/${noteId}`,
@@ -73,4 +86,5 @@ export const {
   useDeleteNoteMutation,
   useEditNoteMutation,
   useMoveNoteMutation,
+  useUploadImageMutation,
 } = noteApi;

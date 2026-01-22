@@ -44,10 +44,18 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
         }`}
       >
         <div className="wrap-break-word whitespace-pre-wrap ">
+          {note.picture && (
+            <img
+              src={note.picture}
+              alt="note"
+              className="w-full rounded-lg mb-2"
+            />
+          )}
+
           <div className="text-gray-900 font-medium">{note.title}</div>
           <PromptClamp text={note.body} />
           <TiDelete
-            className="text-blue-600 size-6 text-xl absolute right-2 top-5 hover:text-red-500 duration-200"
+            className="text-blue-600 size-6 text-xl absolute right-2 bottom-5 hover:text-red-500 duration-200"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(note._id);
