@@ -20,21 +20,6 @@ const BoardsPage = ({ onSelectBoard }) => {
 
   return (
     <div className="flex flex-col items-center mt-10 px-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">My Boards</h1>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-4xl mb-6">
-        {boards?.data?.map((board) => (
-          <li
-            key={board._id}
-            onClick={() => onSelectBoard(board._id)}
-            className="cursor-pointer p-6 bg-white rounded-lg shadow hover:shadow-md hover:bg-blue-50 transition"
-          >
-            <span className="text-lg font-semibold text-gray-700">
-              {board.title}
-            </span>
-          </li>
-        ))}
-      </ul>
-
       <div className="flex gap-2 w-full max-w-md">
         <input
           value={title}
@@ -50,6 +35,21 @@ const BoardsPage = ({ onSelectBoard }) => {
           Create Board
         </button>
       </div>
+      <h1 className="text-3xl font-bold text-gray-800 my-6">My Boards</h1>
+
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-4xl mb-6">
+        {boards?.data?.map((board) => (
+          <li
+            key={board._id}
+            onClick={() => onSelectBoard(board._id)}
+            className="cursor-pointer p-6 bg-white rounded-lg shadow hover:shadow-md hover:bg-blue-50 transition"
+          >
+            <span className="text-lg font-semibold text-gray-700">
+              {board.title}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
