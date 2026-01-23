@@ -1,7 +1,7 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl: `${import.meta.env.VITE_BASE_URL}/api/website`,
+  baseUrl: `${import.meta.env.VITE_BASE_URL}/api`,
   prepareHeaders: (headers) => {
     const storedAuth = localStorage.getItem("auth");
     if (storedAuth) {

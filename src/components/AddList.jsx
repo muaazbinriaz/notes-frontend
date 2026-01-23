@@ -3,7 +3,7 @@ import { RxCross2 } from "react-icons/rx";
 import { useAddListMutation } from "../features/lists/listApi";
 import { toast } from "react-toastify";
 
-const AddList = ({ listCount }) => {
+const AddList = ({ listCount, boardId }) => {
   const [addList, { isLoading }] = useAddListMutation();
   const [title, setTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +11,11 @@ const AddList = ({ listCount }) => {
   const handleAdd = async () => {
     if (!title.trim() || isLoading) return;
     try {
-      await addList({ title: title.trim(), position: listCount }).unwrap();
+      await addList({
+        title: title.trim(),
+        position: listCount,
+        boardId,
+      }).unwrap();
       toast.success("New list added successfully!");
       setTitle("");
       setIsOpen(false);

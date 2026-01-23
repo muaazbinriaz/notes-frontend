@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
 import { FaPaperclip } from "react-icons/fa";
-// update env
+
 const TITLE_LIMIT = 60;
 const BODY_LIMIT = 500;
 const NoteForm = ({ initialData, onSubmit, onClose }) => {
@@ -20,12 +20,21 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
       setBody(initialData.body);
       setTitleCount(initialData.title.length);
       setBodyCount(initialData.body.length);
+      if (initialData.picture) {
+        setPreviewUrl(initialData.picture);
+      }
     }
   }, [initialData]);
+
   const submit = () => {
     if (!title.trim()) return toast.error("Title is required");
     if (!body.trim()) return toast.error("Body is required");
-    onSubmit({ title, body, imageFile });
+    onSubmit({
+      title,
+      body,
+      imageFile,
+      picture: previewUrl || (initialData ? initialData.picture : null),
+    });
     onClose();
   };
 
@@ -39,6 +48,13 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
 
   return (
     <div className="flex flex-col justify-center items-center ">
+      {previewUrl && (
+        <img
+          src={previewUrl}
+          alt="preview"
+          className="w-68 rounded-lg mb-2 mt-3"
+        />
+      )}
       <div className="relative">
         <input
           className="bg-white w-68 p-2 rounded-lg  py-2.5 mt-2 outline-none ring-1 ring-amber-300"
@@ -71,14 +87,12 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
       </div>
       <div className=" pt-2 flex flex-col-reverse">
         <div className="flex justify-center">
-          {initialData && (
-            <button
-              className=" text-lg text-[#01273a] cursor-pointer p-2 rounded"
-              onClick={() => fileInputRef.current.click()}
-            >
-              <FaPaperclip />
-            </button>
-          )}
+          <button
+            className=" text-lg text-[#01273a] cursor-pointer p-2 rounded"
+            onClick={() => fileInputRef.current.click()}
+          >
+            <FaPaperclip />
+          </button>
 
           <button
             className="bg-blue-500 hover:bg-[#0a7db7] duration-300 cursor-pointer font-semibold text-white py-1 px-4 rounded-md mr-2"
@@ -94,13 +108,7 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
             <RxCross2 />
           </button>
         </div>
-        {previewUrl && (
-          <img
-            src={previewUrl}
-            alt="preview"
-            className="w-68 rounded-lg mb-2"
-          />
-        )}
+
         <input
           type="file"
           hidden

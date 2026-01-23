@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../features/lists/authApi";
 import { logout as logoutAction } from "../features/auth/authSlice";
+import { boardApi } from "../features/lists/boardApi";
 import { listApi } from "../features/lists/listApi";
 import { noteApi } from "../features/lists/noteApi";
 
@@ -30,8 +31,10 @@ const Nav = () => {
     } catch (err) {
       console.error("Logout error:", err);
     }
+
     dispatch(logoutAction());
     localStorage.removeItem("auth");
+    dispatch(boardApi.util.resetApiState());
     dispatch(listApi.util.resetApiState());
     dispatch(noteApi.util.resetApiState());
     setOpen(false);

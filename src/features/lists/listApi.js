@@ -7,16 +7,17 @@ export const listApi = createApi({
   tagTypes: ["Lists"],
   endpoints: (builder) => ({
     getLists: builder.query({
-      query: () => "/lists",
+      query: (boardId) => `/lists?boardId=${boardId}`,
       providesTags: ["Lists"],
+      refetchOnMountOrArgChange: true,
       transformResponse: (response) => response.data,
     }),
 
     addList: builder.mutation({
-      query: ({ title, position }) => ({
+      query: ({ title, position, boardId }) => ({
         url: "/lists",
         method: "POST",
-        body: { title, position },
+        body: { title, position, boardId },
       }),
       invalidatesTags: ["Lists"],
     }),
@@ -35,6 +36,7 @@ export const listApi = createApi({
         method: "PUT",
         body: { lists },
       }),
+      invalidatesTags: ["Lists"],
     }),
   }),
 });

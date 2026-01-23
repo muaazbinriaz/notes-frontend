@@ -121,7 +121,17 @@ const ListColumn = ({ list, index, moveList }) => {
   const handleAddNote = async (note) => {
     setLoading(true);
     try {
-      await addNote({ ...note, listId: list._id }).unwrap();
+      const newNote = await addNote({
+        title: note.title,
+        body: note.body,
+        listId: list._id,
+      }).unwrap();
+      if (note.imageFile) {
+        await uploadImage({
+          noteId: newNote.data._id,
+          imageFile: note.imageFile,
+        }).unwrap();
+      }
       setIsBoxOpen(false);
       toast.success("Note added successfully!");
     } catch (err) {
@@ -157,16 +167,25 @@ const ListColumn = ({ list, index, moveList }) => {
   const handleEditNote = async (id, updated) => {
     setLoading(true);
     try {
-      await editNote({
-        id,
-        updateNote: { title: updated.title, body: updated.body },
-      }).unwrap();
+      let pictureUrl = updated.picture;
+
       if (updated.imageFile) {
-        await uploadImage({
+        const res = await uploadImage({
           noteId: id,
           imageFile: updated.imageFile,
         }).unwrap();
+        pictureUrl = res.url;
       }
+
+      await editNote({
+        id,
+        updateNote: {
+          title: updated.title,
+          body: updated.body,
+          picture: pictureUrl,
+        },
+      }).unwrap();
+
       toast.success("Note updated successfully!");
     } catch (err) {
       toast.error("Failed to update note.");
