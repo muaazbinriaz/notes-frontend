@@ -105,7 +105,7 @@ const ListColumn = ({ list, index, moveList }) => {
       drop: async (item) => {
         try {
           await moveNote({
-            noteId: item._id,
+            noteId: item.noteId,
             listId: list._id,
             position: item.position,
           }).unwrap();

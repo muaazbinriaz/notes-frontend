@@ -59,15 +59,42 @@ export const noteApi = createApi({
       }),
       async onQueryStarted(
         { noteId, listId, position },
-        { dispatch, queryFulfilled },
+        { dispatch, queryFulfilled, getState },
       ) {
+        const allQueries = getState().noteApi.queries;
+        let oldListId;
+        let fullNote;
+
+        for (const key in allQueries) {
+          if (key.startsWith("getNotes")) {
+            const notes = allQueries[key]?.data;
+            if (Array.isArray(notes)) {
+              const found = notes.find((n) => n._id === noteId);
+              if (found) {
+                oldListId = found.listId;
+                fullNote = found;
+                break;
+              }
+            }
+          }
+        }
+        if (oldListId && oldListId !== listId) {
+          dispatch(
+            noteApi.util.updateQueryData("getNotes", oldListId, (draft) => {
+              return draft.filter((n) => n._id !== noteId);
+            }),
+          );
+        }
         const patch = dispatch(
-          noteApi.util.updateQueryData("getNotes", undefined, (draft) => {
+          noteApi.util.updateQueryData("getNotes", listId, (draft) => {
             const note = draft.find((n) => n._id === noteId);
             if (note) {
               note.listId = listId;
               note.position = position;
+            } else if (fullNote) {
+              draft.push({ ...fullNote, listId, position });
             }
+            draft.sort((a, b) => a.position - b.position);
           }),
         );
         try {

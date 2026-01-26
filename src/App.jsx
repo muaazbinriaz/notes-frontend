@@ -1,4 +1,10 @@
-import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  Navigate,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -16,6 +22,7 @@ import BoardsPage from "./pages/BoardsPage";
 const App = () => {
   const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
   return (
     <>
       <Nav />
@@ -47,7 +54,6 @@ const App = () => {
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
-
       <ToastContainer position="top-right" autoClose={500} />
     </>
   );

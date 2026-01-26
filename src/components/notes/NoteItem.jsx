@@ -3,13 +3,16 @@ import { useDrag, useDrop } from "react-dnd";
 import { TiDelete } from "react-icons/ti";
 import NoteForm from "./NoteForm";
 import PromptClamp from "../PromptClamp";
+import { useMoveNoteMutation } from "../../features/lists/noteApi";
 
 const NoteItem = ({ note, index, onDelete, onEdit }) => {
+  const [moveNote] = useMoveNoteMutation();
   const ref = useRef(null);
   const [editing, setEditing] = useState(false);
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "Note",
-    item: { _id: note._id, position: index },
+    item: { noteId: note._id, listId: note.listId, position: index },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   }));
 
@@ -22,8 +25,17 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
       if (dragIndex === hoverIndex) return;
       item.position = hoverIndex;
     },
+    drop(item) {
+      moveNote({
+        noteId: item.noteId,
+        listId: note.listId,
+        position: item.position,
+      });
+    },
   });
+
   drag(drop(ref));
+
   if (editing) {
     return (
       <NoteForm
@@ -35,15 +47,15 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
   }
 
   return (
-    <div className="w-68 ">
+    <div className="w-68">
       <li
         ref={ref}
         onClick={() => setEditing(true)}
-        className={`relative p-2  rounded-lg bg-white cursor-pointer ${
+        className={`relative p-2 rounded-lg bg-white cursor-pointer ${
           isDragging ? "opacity-50" : ""
         }`}
       >
-        <div className="wrap-break-word whitespace-pre-wrap ">
+        <div className="wrap-break-word whitespace-pre-wrap">
           {note.picture && (
             <img
               src={note.picture}
