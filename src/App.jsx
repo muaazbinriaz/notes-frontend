@@ -30,7 +30,9 @@ const App = () => {
         <Route
           path="/boards"
           element={
-            <BoardsPage onSelectBoard={(id) => navigate(`/home/${id}`)} />
+            <RequireAuth>
+              <BoardsPage onSelectBoard={(id) => navigate(`/home/${id}`)} />
+            </RequireAuth>
           }
         />
         <Route

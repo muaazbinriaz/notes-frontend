@@ -19,7 +19,24 @@ export const boardApi = createApi({
       query: () => "/boards/getBoards",
       providesTags: ["Boards"],
     }),
+
+    getBoardById: builder.query({
+      query: (boardId) => `/boards/${boardId}`,
+    }),
+
+    inviteBoardMember: builder.mutation({
+      query: ({ boardId, email }) => ({
+        url: `/boards/${boardId}/invite`,
+        method: "POST",
+        body: { email },
+      }),
+    }),
   }),
 });
 
-export const { useCreateBoardMutation, useGetBoardsQuery } = boardApi;
+export const {
+  useCreateBoardMutation,
+  useGetBoardsQuery,
+  useInviteBoardMemberMutation,
+  useGetBoardByIdQuery,
+} = boardApi;

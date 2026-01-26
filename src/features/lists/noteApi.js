@@ -7,8 +7,8 @@ export const noteApi = createApi({
   tagTypes: ["Notes"],
   endpoints: (builder) => ({
     getNotes: builder.query({
-      query: () => "/notes/getNotes",
       providesTags: ["Notes"],
+      query: (listId) => `/notes/getNotes?listId=${listId}`,
       transformResponse: (response) => response.data,
     }),
 

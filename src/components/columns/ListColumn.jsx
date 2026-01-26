@@ -19,7 +19,7 @@ import { useDeleteListMutation } from "../../features/lists/listApi";
 import RoundedLoader from "../RoundedLoader";
 
 const ListColumn = ({ list, index, moveList }) => {
-  const { data: notes } = useGetNotesQuery();
+  const { data: notes } = useGetNotesQuery(list._id);
   const [addNote] = useAddNoteMutation();
   const [deleteNote] = useDeleteNoteMutation();
   const [editNote] = useEditNoteMutation();
