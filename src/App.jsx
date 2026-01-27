@@ -1,16 +1,10 @@
-import {
-  Route,
-  Routes,
-  Navigate,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+// update
 import { useSelector } from "react-redux";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Nav from "./components/Nav";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
