@@ -1,5 +1,4 @@
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-// updated
 import { useSelector } from "react-redux";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";

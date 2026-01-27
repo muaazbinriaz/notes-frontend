@@ -74,7 +74,7 @@ const Nav = () => {
           )}
           {isHomePage && shareOpen && (
             <div className="fixed bg-black/40 inset-0 bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-gray-500/30 backdrop-blur-lg rounded-xl border border-white/20 p-6 -top-60  shadow-lg w-100 relative">
+              <div className="bg-gray-500/30 backdrop-blur-lg rounded-xl border border-white/20 p-6  shadow-lg w-100 relative">
                 <button
                   onClick={() => setShareOpen(false)}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer"
@@ -101,7 +101,7 @@ const Nav = () => {
                             </li>
                           ))
                         ) : (
-                          <li className="text-gray-500">No members yet</li>
+                          <li className="">No members yet</li>
                         )}
                       </ul>
                     </div>
