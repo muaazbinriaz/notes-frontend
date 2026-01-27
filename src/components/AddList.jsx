@@ -29,7 +29,8 @@ const AddList = ({ listCount, boardId, refetchLists }) => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="w-72 shrink-0 h-12 flex items-center justify-center cursor-pointer bg-gray-200 rounded-md hover:bg-gray-300"
+        className="w-72 shrink-0 h-12 flex items-center justify-center cursor-pointer bg-gray-400/30 backdrop-blur-lg  shadow-xl 
+ text-white rounded-md hover:bg-gray-500/30"
       >
         + Add new list
       </div>
@@ -37,7 +38,7 @@ const AddList = ({ listCount, boardId, refetchLists }) => {
   }
 
   return (
-    <div className="w-72 p-2 bg-gray-100 rounded-md">
+    <div className="w-72 p-2 bg-gray-200 rounded-md">
       <input
         type="text"
         value={title}
@@ -48,7 +49,7 @@ const AddList = ({ listCount, boardId, refetchLists }) => {
       />
       <div className="flex gap-2 mt-2 shrink-0 w-72">
         <button
-          className={`bg-[#2996cc] cursor-pointer hover:bg-[#248abd] duration-200 text-white px-3 py-1 rounded ${
+          className={`bg-[#39393a] cursor-pointer hover:bg-[#2c2c2c] duration-200 text-white px-3 py-1 rounded ${
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={handleAdd}

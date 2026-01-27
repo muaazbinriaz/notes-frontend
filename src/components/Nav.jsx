@@ -57,7 +57,10 @@ const Nav = () => {
   }, []);
 
   return (
-    <div className="bg-[#437993] text-white flex justify-between items-center px-10 py-3">
+    <div
+      className="bg-gray-500/30  shadow-xl border border-white/20
+ text-white flex justify-between items-center px-10 py-3 "
+    >
       <div>
         <h1 className="font-bold text-4xl leading-11">Notes App</h1>
         <p className="text-[17px]">Take Notes and never forget</p>
@@ -66,7 +69,7 @@ const Nav = () => {
         <div className="flex gap-3">
           {isHomePage && (
             <button
-              className="bg-[#5cabd3] duration-300 hover:bg-[#3793c1] cursor-pointer px-4 rounded-md"
+              className="bg-[#DCDFE4] text-gray-700 duration-300 hover:bg-[#cbcdd0] cursor-pointer px-4 rounded-md"
               onClick={() => setShareOpen(true)}
             >
               Share
@@ -112,7 +115,7 @@ const Nav = () => {
           )}
           <button
             onClick={() => setOpen(!open)}
-            className="w-10 h-10 cursor-pointer rounded-full bg-[#78AFCB] hover:bg-[#5faacf] duration-200 text-white font-bold flex items-center justify-center"
+            className="w-10 h-10 cursor-pointer rounded-full bg-[#4f4f4f] hover:bg-[#414142] duration-200 text-white font-bold flex items-center justify-center"
           >
             {firstLetter}
           </button>
@@ -127,7 +130,7 @@ const Nav = () => {
                 <p className="text-gray-500">{auth?.user?.email}</p>
                 <button
                   onClick={handleLogout}
-                  className="mt-2 cursor-pointer bg-[#407b98] hover:bg-[#4f8aa7] transition duration-300 text-white px-3 py-1 rounded-md"
+                  className="mt-2 cursor-pointer bg-[#565758] hover:bg-[#333333] transition duration-300 text-white px-3 py-1 rounded-md"
                 >
                   Logout
                 </button>

@@ -57,7 +57,7 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
       )}
       <div className="relative">
         <input
-          className="bg-white w-68 p-2 rounded-lg  py-2.5 mt-2 outline-none ring-1 ring-amber-300"
+          className="bg-gray-700 text-gray-300 w-68 p-2 rounded-lg  py-2.5 mt-2 outline-none ring-1 ring-white"
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
@@ -66,13 +66,13 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
           maxLength={TITLE_LIMIT}
           autoFocus
         />
-        <span className="absolute bottom-0 right-5 text-sm text-gray-600">
+        <span className="absolute bottom-0 right-5 text-sm text-gray-300">
           {titleCount} / {TITLE_LIMIT}
         </span>
       </div>
       <div className="relative">
         <textarea
-          className="bg-white w-68 p-2 rounded-lg  py-2.5 mt-2 resize-none outline-none ring-1 ring-amber-300"
+          className="bg-gray-700 text-gray-300 w-68 p-2 rounded-lg  py-2.5 mt-2 resize-none outline-none ring-1 ring-white"
           rows={3}
           value={body}
           onChange={(e) => {
@@ -81,28 +81,28 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
           }}
           maxLength={BODY_LIMIT}
         />
-        <span className="absolute bottom-1 right-5 text-sm text-gray-600">
+        <span className="absolute bottom-1 right-5 text-sm text-gray-300">
           {bodyCount} / {BODY_LIMIT}
         </span>
       </div>
       <div className=" pt-2 flex flex-col-reverse">
         <div className="flex justify-center">
           <button
-            className=" text-lg text-[#01273a] cursor-pointer p-2 rounded"
+            className=" text-lg text-gray-300 cursor-pointer p-2 rounded"
             onClick={() => fileInputRef.current.click()}
           >
             <FaPaperclip />
           </button>
 
           <button
-            className="bg-blue-500 hover:bg-[#0a7db7] duration-300 cursor-pointer font-semibold text-white py-1 px-4 rounded-md mr-2"
+            className="bg-gray-600 hover:bg-gray-700 duration-300 cursor-pointer font-semibold text-white py-1 px-4 rounded-md mr-2"
             onClick={submit}
           >
             {initialData ? "Save" : "Add card"}
           </button>
 
           <button
-            className="text-xl text-[#01273a] cursor-pointer hover:bg-[#529dc2] p-2 rounded"
+            className="text-xl text-gray-300 cursor-pointer hover:bg-gray-600 p-2 rounded"
             onClick={onClose}
           >
             <RxCross2 />

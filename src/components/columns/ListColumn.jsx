@@ -260,12 +260,12 @@ const ListColumn = ({ list, index, moveList }) => {
         ref.current = node;
         dragRef(dropRef(noteDropRef(node)));
       }}
-      className={`bg-[#78afcb] max-w-72 w-full shrink-0 pb-3 rounded-xl transition-all duration-200 ${
-        isOver ? "bg-blue-400" : ""
+      className={`bg-[#0E1011] max-w-72 w-full shrink-0 pb-3 rounded-xl transition-all duration-200 ${
+        isOver ? "bg-[#262728]" : ""
       } ${isDragging ? "opacity-50 cursor-grabbing" : "opacity-100 cursor-grab"}`}
     >
       <div className="p-4 flex justify-between ">
-        <p className="pl-2 text-[17px] font-semibold text-[#012a3e]">
+        <p className="pl-2 text-[17px] font-semibold text-gray-400">
           {list.title}
         </p>
         <div className="flex gap-2">
@@ -280,7 +280,6 @@ const ListColumn = ({ list, index, moveList }) => {
           </button>
         </div>
       </div>
-
       {loading ? (
         <div className="flex justify-center items-center h-32">
           <RoundedLoader />
@@ -289,18 +288,18 @@ const ListColumn = ({ list, index, moveList }) => {
         <div className="overflow-scroll max-h-[calc(100vh-260px)] scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {isPanelOpen && (
             <div ref={panelRef} className="px-2 pb-3 sticky top-0 z-10">
-              <div className="bg-[#6aa0bd] rounded-lg p-3 flex flex-col gap-3">
+              <div className="bg-[#242528] rounded-lg p-3 flex flex-col gap-3">
                 <div className="flex items-center gap-3"></div>
                 <div className="flex flex-col gap-3">
                   <input
                     type="text"
                     placeholder="Filter by"
-                    className="rounded-lg bg-[#fafafa] p-2 border border-[#437993] text-[#1f5672] focus:outline-none focus:ring-2 focus:ring-[#437993] placeholder-gray-400"
+                    className="rounded-lg bg-gray-700 p-2 border border-gray-300 text-gray-300 focus:outline-none focus:ring-2 placeholder-gray-400"
                     onChange={(e) => setSearchFilter(e.target.value)}
                     value={searchFilter}
                   />
                   <select
-                    className="px-3 py-2 bg-[#fafafa] rounded-lg cursor-pointer border border-[#437993] text-[#1f5672] appearance-none focus:outline-none focus:ring-1 focus:ring-[#437993] transition duration-300"
+                    className="px-3 py-2 bg-gray-700 rounded-lg cursor-pointer border border-gray-300 text-gray-300 appearance-none focus:outline-none focus:ring-1 transition duration-300"
                     onChange={(e) => setSortBy(e.target.value)}
                     value={sortBy}
                   >
@@ -346,16 +345,15 @@ const ListColumn = ({ list, index, moveList }) => {
           )}
         </div>
       )}
-
       {!isBoxOpen && !loading && (
         <div
           onClick={() => setIsBoxOpen(true)}
-          className="w-68 pl-2 py-1.5 mx-auto mt-5 flex items-center gap-2 hover:bg-[#5b97b5] rounded-lg cursor-pointer"
+          className="w-68 pl-2 py-1.5 mx-auto mt-5 text-gray-400 flex items-center gap-2 hover:bg-gray-700 hover:text-gray-300 rounded-lg cursor-pointer duration-300"
         >
           <span className="text-[20px]">
-            <IoMdAdd className="text-[#012131]" />
+            <IoMdAdd className="" />
           </span>
-          <span className="font-medium text-[#012a3e]">Add a card</span>
+          <span className="font-medium ">Add a card</span>
         </div>
       )}
     </div>

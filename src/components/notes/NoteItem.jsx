@@ -51,7 +51,7 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
       <li
         ref={ref}
         onClick={() => setEditing(true)}
-        className={`relative p-2 rounded-lg bg-white cursor-pointer ${
+        className={`relative p-2 rounded-lg bg-[#242528] cursor-pointer ${
           isDragging ? "opacity-50" : ""
         }`}
       >
@@ -64,8 +64,10 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
             />
           )}
 
-          <div className="text-gray-900 font-medium">{note.title}</div>
-          <PromptClamp text={note.body} />
+          <div className="text-gray-300 font-medium">{note.title}</div>
+          <div className="text-gray-400">
+            <PromptClamp text={note.body} />
+          </div>
           <TiDelete
             className="text-blue-600 size-6 text-xl absolute right-2 bottom-5 hover:text-red-500 duration-200"
             onClick={(e) => {

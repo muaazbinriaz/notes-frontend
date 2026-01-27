@@ -18,36 +18,38 @@ const App = () => {
 
   return (
     <>
-      <Nav />
-      <Routes>
-        <Route
-          path="/"
-          element={<Navigate to={auth?.token ? "/boards" : "/login"} />}
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Navigate to="/boards" />} />
-        <Route
-          path="/boards"
-          element={
-            <RequireAuth>
-              <BoardsPage onSelectBoard={(id) => navigate(`/home/${id}`)} />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/home/:boardId"
-          element={
-            <RequireAuth>
-              <DndProvider backend={HTML5Backend}>
-                <Home />
-              </DndProvider>
-            </RequireAuth>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <ToastContainer position="top-right" autoClose={500} />
+      <div className="bg-[linear-gradient(90deg,rgba(57,35,170,1)_0%,rgba(110,49,165,1)_50%,rgba(192,67,159,1)_100%)] min-h-screen">
+        <Nav />
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate to={auth?.token ? "/boards" : "/login"} />}
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/home" element={<Navigate to="/boards" />} />
+          <Route
+            path="/boards"
+            element={
+              <RequireAuth>
+                <BoardsPage onSelectBoard={(id) => navigate(`/home/${id}`)} />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/home/:boardId"
+            element={
+              <RequireAuth>
+                <DndProvider backend={HTML5Backend}>
+                  <Home />
+                </DndProvider>
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <ToastContainer position="top-right" autoClose={500} />
+      </div>
     </>
   );
 };
