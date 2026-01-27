@@ -12,7 +12,7 @@ import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import RequireAuth from "./components/RequireAuth";
 import BoardsPage from "./pages/BoardsPage";
-
+// update
 const App = () => {
   const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
