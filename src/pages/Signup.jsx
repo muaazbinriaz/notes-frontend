@@ -34,7 +34,7 @@ function Signup() {
       dispatch(setCredentials({ user: result, token: result.token }));
       localStorage.setItem(
         "auth",
-        JSON.stringify({ user: result, token: result.token })
+        JSON.stringify({ user: result, token: result.token }),
       );
 
       toast.success("Signup successful!");
@@ -51,7 +51,7 @@ function Signup() {
         <RoundedLoader />
       ) : (
         <div className="flex items-center justify-center mt-20">
-          <div className="w-full max-w-md bg-gray-100 p-6 rounded-md shadow-md">
+          <div className="w-full max-w-md bg-gray-200 p-6 rounded-md shadow-md">
             <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
               Signup
             </h1>
@@ -70,7 +70,7 @@ function Signup() {
                   value={signupInfo.name}
                   autoFocus
                   placeholder="Enter your name..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2"
                 />
               </div>
 
@@ -87,7 +87,7 @@ function Signup() {
                   onChange={handleChange}
                   value={signupInfo.email}
                   placeholder="Enter your email..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 "
                 />
               </div>
 
@@ -104,13 +104,13 @@ function Signup() {
                   onChange={handleChange}
                   value={signupInfo.password}
                   placeholder="Enter your password..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 "
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-[#437993] hover:bg-[#347494] text-white font-semibold py-2 rounded-md transition duration-200"
+                className="w-full bg-[#39393a] hover:bg-[#2c2c2d] cursor-pointer text-white font-semibold py-2 rounded-md transition duration-200"
               >
                 Signup
               </button>
@@ -119,7 +119,7 @@ function Signup() {
                 Already have an account?{" "}
                 <Link
                   to="/"
-                  className="text-[#1b6d96] hover:text-[#036494] border-b font-medium"
+                  className="text-gray-900 hover:text-gray-900 border-b font-medium"
                 >
                   Login
                 </Link>

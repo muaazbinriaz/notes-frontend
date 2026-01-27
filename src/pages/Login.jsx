@@ -33,7 +33,7 @@ function Login() {
       dispatch(setCredentials({ user: result, token: result.token }));
       localStorage.setItem(
         "auth",
-        JSON.stringify({ user: result, token: result.token })
+        JSON.stringify({ user: result, token: result.token }),
       );
 
       toast.success("Login successful!");
@@ -50,7 +50,7 @@ function Login() {
         <RoundedLoader />
       ) : (
         <div className="flex items-center justify-center mt-24 ">
-          <div className="w-full max-w-md bg-gray-100 p-6 rounded-md shadow-lg">
+          <div className="w-full max-w-md bg-gray-200 p-6 rounded-md shadow-lg">
             <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
               Login
             </h1>
@@ -69,7 +69,7 @@ function Login() {
                   value={loginInfo.email}
                   autoFocus
                   placeholder="Enter your email..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 "
                 />
               </div>
 
@@ -86,13 +86,13 @@ function Login() {
                   onChange={handleChange}
                   value={loginInfo.password}
                   placeholder="Enter your password..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#437993]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 "
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-[#437993] hover:bg-[#347494] text-white font-semibold py-2 rounded-md transition duration-200"
+                className="w-full bg-[#39393a] cursor-pointer hover:bg-[#222223] text-white font-semibold py-2 rounded-md transition duration-200"
               >
                 Login
               </button>
@@ -101,7 +101,7 @@ function Login() {
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-[#437993] hover:text-[#036494] border-b font-medium"
+                  className="text-gray-900 hover:text-gray-950 border-b font-medium"
                 >
                   Signup
                 </Link>
