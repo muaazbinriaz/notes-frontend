@@ -34,7 +34,7 @@ const SharedBoard = ({ boardId }) => {
           />
           <button
             type="submit"
-            className="bg-gray-300 duration-300 hover:bg-[#588ba3]  hover:text-white cursor-pointer px-4 py-2 ml-3 rounded-md"
+            className="bg-gray-600 duration-300 hover:bg-gray-700 text-white cursor-pointer px-4 py-2 ml-3 rounded-md"
           >
             Invite
           </button>
