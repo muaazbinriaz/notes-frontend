@@ -1,20 +1,29 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../features/lists/authApi";
 import { logout as logoutAction } from "../features/auth/authSlice";
-import { boardApi } from "../features/lists/boardApi";
+import { boardApi, useGetBoardByIdQuery } from "../features/lists/boardApi";
 import { listApi } from "../features/lists/listApi";
 import { noteApi } from "../features/lists/noteApi";
+import SharedBoard from "./SharedBoard";
 
 const Nav = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const match = useMatch("/home/:boardId");
+  const boardId = match?.params?.boardId;
+  const isHomePage = !!boardId;
   const dispatch = useDispatch();
   const [logoutApi] = useLogoutMutation();
   const auth = useSelector((state) => state.auth);
   const dropDown = useRef(null);
   const [open, setOpen] = useState(false);
-
+  const [shareOpen, setShareOpen] = useState(false);
+  const { data: boardData } = useGetBoardByIdQuery(boardId, {
+    skip: !isHomePage || !boardId,
+  });
+  const board = boardData?.data;
   const firstLetter = auth?.user?.name
     ? auth.user.name.charAt(0).toUpperCase()
     : "?";
@@ -53,13 +62,60 @@ const Nav = () => {
         <p className="text-[17px]">Take Notes and never forget</p>
       </div>
       {auth?.token && (
-        <div>
+        <div className="flex gap-3">
+          {isHomePage && (
+            <button
+              className="bg-blue-400 duration-300 hover:bg-gray-300 hover:text-black cursor-pointer px-4 rounded-md"
+              onClick={() => setShareOpen(true)}
+            >
+              Share
+            </button>
+          )}
+          {isHomePage && shareOpen && (
+            <div className="fixed bg-black/40 inset-0 bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-gray-500/30 backdrop-blur-lg rounded-xl border border-white/20 p-6 -top-60  shadow-lg w-100 relative">
+                <button
+                  onClick={() => setShareOpen(false)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer"
+                >
+                  ❌
+                </button>
+                <div className="p-4 border-gray-200 ">
+                  <SharedBoard boardId={boardId} />
+                  {board && (
+                    <div className="mt-4">
+                      <h3 className="font-semibold mb-2">
+                        Board Collaborators
+                      </h3>
+                      <ul className="list-disc list-inside">
+                        {board?.ownerId && (
+                          <li>
+                            {board.ownerId.name} ({board.ownerId.email}) - owner
+                          </li>
+                        )}
+                        {board?.members?.length > 0 ? (
+                          board.members.map((m) => (
+                            <li key={m._id}>
+                              {m.name} ({m.email})
+                            </li>
+                          ))
+                        ) : (
+                          <li className="text-gray-500">No members yet</li>
+                        )}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
           <button
             onClick={() => setOpen(!open)}
             className="w-10 h-10 cursor-pointer rounded-full bg-[#78AFCB] hover:bg-[#5faacf] duration-200 text-white font-bold flex items-center justify-center"
           >
             {firstLetter}
           </button>
+
           {open && (
             <div
               ref={dropDown}

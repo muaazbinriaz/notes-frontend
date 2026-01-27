@@ -7,14 +7,10 @@ import {
 } from "../features/lists/listApi";
 import RoundedLoader from "../components/RoundedLoader";
 import { useEffect, useState, useCallback } from "react";
-import SharedBoard from "../components/SharedBoard";
-import { useGetBoardByIdQuery } from "../features/lists/boardApi";
 
 const Home = () => {
   const { boardId } = useParams();
   const { data: lists, isLoading, isError, error } = useGetListsQuery(boardId);
-  const { data: boardData } = useGetBoardByIdQuery(boardId);
-  const board = boardData?.data;
   const [updateListOrder] = useUpdateListOrderMutation();
   const [localLists, setLocalLists] = useState([]);
 
@@ -58,28 +54,6 @@ const Home = () => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-100px)]">
-      <div className="p-4 border-b border-gray-200">
-        <SharedBoard boardId={boardId} />
-        <div className="mt-4">
-          <h3 className="font-semibold mb-2">Board Collaborators</h3>
-          <ul className="list-disc list-inside text-gray-700">
-            {board?.ownerId && (
-              <li>
-                {board.ownerId.name} ({board.ownerId.email}) - owner
-              </li>
-            )}
-            {board?.members?.length > 0 ? (
-              board.members.map((m) => (
-                <li key={m._id}>
-                  {m.name} ({m.email})
-                </li>
-              ))
-            ) : (
-              <li className="text-gray-500">No members yet</li>
-            )}
-          </ul>
-        </div>
-      </div>
       <div className="flex items-start gap-6 p-4 flex-1 overflow-x-auto overflow-y-hidden scrollbar-hide">
         {localLists.length === 0 ? (
           <div className="text-gray-500 text-lg">
