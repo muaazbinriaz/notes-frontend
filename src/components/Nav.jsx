@@ -7,6 +7,7 @@ import { boardApi, useGetBoardByIdQuery } from "../features/lists/boardApi";
 import { listApi } from "../features/lists/listApi";
 import { noteApi } from "../features/lists/noteApi";
 import SharedBoard from "./SharedBoard";
+import { IoIosClose } from "react-icons/io";
 
 const Nav = () => {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ const Nav = () => {
                   onClick={() => setShareOpen(false)}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer"
                 >
-                  ❌
+                  <IoIosClose className="text-red-500 size-10 hover:text-red-600 duration-300" />
                 </button>
                 <div className="p-4 border-gray-200 ">
                   <SharedBoard boardId={boardId} />
