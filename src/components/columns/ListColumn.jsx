@@ -59,6 +59,10 @@ const ListColumn = ({ list, index, moveList }) => {
     if (sortBy === "recent") {
       return new Date(b.createdAt) - new Date(a.createdAt);
     }
+    if (sortBy === "sort by") {
+      return a.position - b.position;
+    }
+
     return a.position - b.position;
   });
 

@@ -4,10 +4,11 @@ import {
   useGetBoardsQuery,
 } from "../features/lists/boardApi";
 import RoundedLoader from "../components/RoundedLoader";
+import { toast } from "react-toastify";
 
 const BoardsPage = ({ onSelectBoard }) => {
-  const { data: boards, isLoading, error } = useGetBoardsQuery();
-  const [createBoard] = useCreateBoardMutation();
+  const { data: boards, isLoading, error, refetch } = useGetBoardsQuery();
+  const [createBoard, { isLoading: isCreating }] = useCreateBoardMutation();
   const [title, setTitle] = useState("");
   if (isLoading) return <RoundedLoader />;
   if (error) return <p>Failed to load boards</p>;
@@ -16,10 +17,13 @@ const BoardsPage = ({ onSelectBoard }) => {
     if (!title.trim()) return;
     await createBoard({ title });
     setTitle("");
+    await refetch();
+    toast.success("New Board Created Successfully!");
   };
 
   return (
     <div className="flex flex-col items-center mt-10 px-4">
+      {isCreating && <RoundedLoader />}
       <div className="flex gap-2 w-full max-w-md">
         <input
           value={title}
@@ -29,7 +33,7 @@ const BoardsPage = ({ onSelectBoard }) => {
         />
         <button
           onClick={handleCreate}
-          className="px-4 py-2 bg-[#518097] cursor-pointer text-white rounded-md hover:bg-[#437993] duration-300"
+          className="px-4 py-2 bg-[#658fa4] cursor-pointer text-white rounded-md hover:bg-[#75a1b8] duration-300"
           disabled={!title.trim()}
         >
           Create Board
