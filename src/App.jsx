@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-// update
+// updated
 import { useSelector } from "react-redux";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -12,7 +12,7 @@ import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import RequireAuth from "./components/RequireAuth";
 import BoardsPage from "./pages/BoardsPage";
-// update
+
 const App = () => {
   const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
