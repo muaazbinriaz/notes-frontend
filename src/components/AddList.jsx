@@ -3,7 +3,7 @@ import { RxCross2 } from "react-icons/rx";
 import { useAddListMutation } from "../features/lists/listApi";
 import { toast } from "react-toastify";
 
-const AddList = ({ listCount, boardId }) => {
+const AddList = ({ listCount, boardId, refetchLists }) => {
   const [addList, { isLoading }] = useAddListMutation();
   const [title, setTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +16,7 @@ const AddList = ({ listCount, boardId }) => {
         position: listCount,
         boardId,
       }).unwrap();
+      await refetchLists();
       toast.success("New list added successfully!");
       setTitle("");
       setIsOpen(false);
@@ -47,7 +48,7 @@ const AddList = ({ listCount, boardId }) => {
       />
       <div className="flex gap-2 mt-2 shrink-0 w-72">
         <button
-          className={`bg-blue-500 cursor-pointer hover:bg-blue-600 duration-200 text-white px-3 py-1 rounded ${
+          className={`bg-[#2996cc] cursor-pointer hover:bg-[#248abd] duration-200 text-white px-3 py-1 rounded ${
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={handleAdd}

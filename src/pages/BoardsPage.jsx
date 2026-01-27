@@ -25,11 +25,11 @@ const BoardsPage = ({ onSelectBoard }) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="New board title"
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#437993]"
         />
         <button
           onClick={handleCreate}
-          className="px-4 py-2 bg-blue-600 cursor-pointer text-white rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+          className="px-4 py-2 bg-[#518097] cursor-pointer text-white rounded-md hover:bg-[#437993] duration-300"
           disabled={!title.trim()}
         >
           Create Board

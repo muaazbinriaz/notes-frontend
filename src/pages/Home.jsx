@@ -10,7 +10,13 @@ import { useEffect, useState, useCallback } from "react";
 
 const Home = () => {
   const { boardId } = useParams();
-  const { data: lists, isLoading, isError, error } = useGetListsQuery(boardId);
+  const {
+    data: lists,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetListsQuery(boardId);
   const [updateListOrder] = useUpdateListOrderMutation();
   const [localLists, setLocalLists] = useState([]);
 
@@ -69,7 +75,11 @@ const Home = () => {
             />
           ))
         )}
-        <AddList listCount={localLists.length} boardId={boardId} />
+        <AddList
+          listCount={localLists.length}
+          boardId={boardId}
+          refetchLists={refetch}
+        />
       </div>
     </div>
   );

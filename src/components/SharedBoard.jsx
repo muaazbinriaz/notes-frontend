@@ -30,11 +30,11 @@ const SharedBoard = ({ boardId }) => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter collaborator email"
             required
-            className="p-2 border-2 rounded-lg outline-none border-none bg-white text-black"
+            className="p-2 border rounded-md outline-gray-500 border-gray-500 bg-gray-200 text-gray-800"
           />
           <button
             type="submit"
-            className="bg-blue-400 duration-300 hover:bg-gray-300 hover:text-black cursor-pointer px-4 py-2 ml-3 rounded-md"
+            className="bg-gray-300 duration-300 hover:bg-[#588ba3]  hover:text-white cursor-pointer px-4 py-2 ml-3 rounded-md"
           >
             Invite
           </button>

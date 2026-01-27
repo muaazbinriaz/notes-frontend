@@ -19,7 +19,7 @@ import { useDeleteListMutation } from "../../features/lists/listApi";
 import RoundedLoader from "../RoundedLoader";
 
 const ListColumn = ({ list, index, moveList }) => {
-  const { data: notes } = useGetNotesQuery(list._id);
+  const { data: notes, refetch } = useGetNotesQuery(list._id);
   const [addNote] = useAddNoteMutation();
   const [deleteNote] = useDeleteNoteMutation();
   const [editNote] = useEditNoteMutation();
@@ -121,17 +121,24 @@ const ListColumn = ({ list, index, moveList }) => {
   const handleAddNote = async (note) => {
     setLoading(true);
     try {
+      const maxPosition =
+        listNotesRaw.length > 0
+          ? Math.max(...listNotesRaw.map((n) => n.position || 0))
+          : 0;
       const newNote = await addNote({
         title: note.title,
         body: note.body,
         listId: list._id,
+        position: maxPosition + 1,
       }).unwrap();
+
       if (note.imageFile) {
         await uploadImage({
           noteId: newNote.data._id,
           imageFile: note.imageFile,
         }).unwrap();
       }
+      await refetch();
       setIsBoxOpen(false);
       toast.success("Note added successfully!");
     } catch (err) {
@@ -155,6 +162,7 @@ const ListColumn = ({ list, index, moveList }) => {
       setLoading(true);
       try {
         await deleteNote(id).unwrap();
+        await refetch();
         toast.success("Note deleted successfully!");
       } catch (err) {
         toast.error("Failed to delete note.");
@@ -185,7 +193,7 @@ const ListColumn = ({ list, index, moveList }) => {
           picture: pictureUrl,
         },
       }).unwrap();
-
+      await refetch();
       toast.success("Note updated successfully!");
     } catch (err) {
       toast.error("Failed to update note.");

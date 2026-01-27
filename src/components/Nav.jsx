@@ -66,7 +66,7 @@ const Nav = () => {
         <div className="flex gap-3">
           {isHomePage && (
             <button
-              className="bg-blue-400 duration-300 hover:bg-gray-300 hover:text-black cursor-pointer px-4 rounded-md"
+              className="bg-[#5cabd3] duration-300 hover:bg-[#3793c1] cursor-pointer px-4 rounded-md"
               onClick={() => setShareOpen(true)}
             >
               Share
@@ -74,7 +74,7 @@ const Nav = () => {
           )}
           {isHomePage && shareOpen && (
             <div className="fixed bg-black/40 inset-0 bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-gray-500/30 backdrop-blur-lg rounded-xl border border-white/20 p-6  shadow-lg w-100 relative">
+              <div className="bg-white backdrop-blur-lg rounded-xl borde p-6 shadow-lg w-100 relative text-gray-950">
                 <button
                   onClick={() => setShareOpen(false)}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer"
