@@ -81,7 +81,7 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
             {titleCount} / {TITLE_LIMIT}
           </span>
         </div>
-        <div className=" pt-2 flex flex-col-reverse">
+        <div className=" pt-7 pb-1.5 flex flex-col-reverse">
           <div className="flex justify-center">
             <button
               className=" text-lg text-gray-300 cursor-pointer p-2 rounded"

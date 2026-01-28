@@ -7,7 +7,7 @@ const AddList = ({ listCount, boardId, refetchLists }) => {
   const [addList, { isLoading }] = useAddListMutation();
   const [title, setTitle] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
+  const titleLimit = 25;
   const handleAdd = async () => {
     if (!title.trim() || isLoading) return;
     try {
@@ -42,6 +42,7 @@ const AddList = ({ listCount, boardId, refetchLists }) => {
         type="text"
         value={title}
         autoFocus
+        maxLength={titleLimit}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Enter list title"
         className="w-full p-1 rounded border"

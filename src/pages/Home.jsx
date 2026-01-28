@@ -59,8 +59,8 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] ">
-      <div className="flex items-start gap-6 p-4 flex-1 overflow-x-auto overflow-y-hidden scrollbar-hide">
+    <div className="flex flex-col h-[calc(100vh-100px)]">
+      <div className="flex items-start gap-6 p-4 flex-1 overflow-x-auto overflow-y-hidden scrollbar-hide ">
         {localLists.length === 0 ? (
           <div className="text-gray-300 text-lg">
             No lists yet. Create your first list!
