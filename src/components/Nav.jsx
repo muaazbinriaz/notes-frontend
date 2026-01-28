@@ -72,6 +72,7 @@ const Nav = () => {
               Share
             </button>
           )}
+          {/* update */}
           {isHomePage && shareOpen && (
             <div className="fixed bg-black/40 inset-0 bg-opacity-50 flex justify-center items-center z-50">
               <div className="bg-gray-300 backdrop-blur-lg rounded-xl borde p-6 shadow-lg w-100 relative text-gray-950">
