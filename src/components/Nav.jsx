@@ -58,7 +58,7 @@ const Nav = () => {
 
   return (
     <div
-      className="bg-gray-500/30  shadow-xl border border-white/20
+      className="bg-gray-500/30  shadow-xl border-white/20
  text-white flex justify-between items-center px-10 py-3 "
     >
       <div>
