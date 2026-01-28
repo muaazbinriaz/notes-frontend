@@ -57,7 +57,7 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
       )}
       <div className="relative">
         <input
-          className="bg-gray-700 text-gray-300 w-68 p-2 rounded-lg  py-2.5 mt-2 outline-none ring-1 ring-white"
+          className="bg-gray-700 text-gray-300 w-68 p-2 rounded-lg  py-2.5 mt-2 outline-none ring-2 ring-gray-500"
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
@@ -66,13 +66,13 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
           maxLength={TITLE_LIMIT}
           autoFocus
         />
-        <span className="absolute bottom-0 right-5 text-sm text-gray-300">
+        <span className="absolute bottom-0 right-2 text-sm text-gray-300">
           {titleCount} / {TITLE_LIMIT}
         </span>
       </div>
       <div className="relative">
         <textarea
-          className="bg-gray-700 text-gray-300 w-68 p-2 rounded-lg  py-2.5 mt-2 resize-none outline-none ring-1 ring-white"
+          className="bg-gray-700 text-gray-300 w-68 p-2 rounded-lg  py-2.5 mt-2 resize-none outline-none ring-2 ring-gray-500"
           rows={3}
           value={body}
           onChange={(e) => {
@@ -81,7 +81,7 @@ const NoteForm = ({ initialData, onSubmit, onClose }) => {
           }}
           maxLength={BODY_LIMIT}
         />
-        <span className="absolute bottom-1 right-5 text-sm text-gray-300">
+        <span className="absolute bottom-1.5 right-2 text-sm text-gray-300">
           {bodyCount} / {BODY_LIMIT}
         </span>
       </div>

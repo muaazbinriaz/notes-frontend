@@ -29,8 +29,7 @@ const AddList = ({ listCount, boardId, refetchLists }) => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="w-72 shrink-0 h-12 flex items-center justify-center cursor-pointer bg-gray-400/30 backdrop-blur-lg  shadow-xl 
- text-white rounded-md hover:bg-gray-500/30"
+        className="w-72 shrink-0 h-12 flex items-center justify-center cursor-pointer bg-gray-300/30 backdrop-blur-lg  shadow-xl duration-300 text-white rounded-md hover:bg-gray-200/30"
       >
         + Add new list
       </div>

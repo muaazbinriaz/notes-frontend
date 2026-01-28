@@ -57,10 +57,7 @@ const Nav = () => {
   }, []);
 
   return (
-    <div
-      className="bg-gray-500/30  shadow-xl border-white/20
- text-white flex justify-between items-center px-10 py-3 "
-    >
+    <div className="bg-gray-500/30  shadow-xl border-white/20 text-white flex justify-between items-center px-10 py-3 ">
       <div>
         <h1 className="font-bold text-4xl leading-11">Notes App</h1>
         <p className="text-[17px]">Take Notes and never forget</p>
@@ -82,7 +79,7 @@ const Nav = () => {
                   onClick={() => setShareOpen(false)}
                   className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer"
                 >
-                  <IoIosClose className="text-red-500 size-10 hover:text-red-600 duration-300" />
+                  <IoIosClose className="text-gray-900 size-10 hover:text-gray-950 hover:outline-1 rounded-md duration-300" />
                 </button>
                 <div className="p-4 border-gray-200 ">
                   <SharedBoard boardId={boardId} />
@@ -123,7 +120,7 @@ const Nav = () => {
           {open && (
             <div
               ref={dropDown}
-              className="absolute right-0 mt-2 w-65 bg-white border border-gray-200 rounded-md shadow-md z-10"
+              className="absolute right-1 mt-0 w-65 bg-gray-100 border border-gray-200 rounded-md shadow-md z-10"
             >
               <div className="p-4">
                 <p className="text-gray-700">{auth?.user?.name}</p>
