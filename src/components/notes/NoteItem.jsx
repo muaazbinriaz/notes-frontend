@@ -1,15 +1,13 @@
 import { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import { TiDelete } from "react-icons/ti";
+import { MdSubject } from "react-icons/md";
 import NoteForm from "./NoteForm";
-import PromptClamp from "../PromptClamp";
 import { useMoveNoteMutation } from "../../features/lists/noteApi";
 
 const NoteItem = ({ note, index, onDelete, onEdit }) => {
   const [moveNote] = useMoveNoteMutation();
   const ref = useRef(null);
   const [editing, setEditing] = useState(false);
-
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "Note",
     item: { noteId: note._id, listId: note.listId, position: index },
@@ -38,11 +36,22 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
 
   if (editing) {
     return (
-      <NoteForm
-        initialData={note}
-        onSubmit={(data) => onEdit(data)}
-        onClose={() => setEditing(false)}
-      />
+      <div className="fixed bg-black/40 inset-0 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-[#1c1d1f] p-6 rounded-lg w-96 max-h-[90vh] overflow-y-auto">
+          <NoteForm
+            initialData={note}
+            onSubmit={(data) => {
+              onEdit(data);
+              setEditing(false);
+            }}
+            onClose={() => setEditing(false)}
+            onDelete={() => {
+              setEditing(false);
+              onDelete();
+            }}
+          />
+        </div>
+      </div>
     );
   }
 
@@ -65,16 +74,14 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
           )}
 
           <div className="text-gray-300 font-medium">{note.title}</div>
-          <div className="text-gray-400">
-            <PromptClamp text={note.body} />
-          </div>
-          <TiDelete
-            className="text-blue-600 size-6 text-xl absolute right-2 bottom-5 hover:text-red-500 duration-200"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(note._id);
-            }}
-          />
+          {note.body && (
+            <div className="mt-2">
+              <MdSubject
+                className="text-gray-400 size-4"
+                title="This card has a description."
+              />
+            </div>
+          )}
         </div>
       </li>
     </div>

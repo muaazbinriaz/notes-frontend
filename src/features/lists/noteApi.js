@@ -13,10 +13,10 @@ export const noteApi = createApi({
     }),
 
     addNote: builder.mutation({
-      query: (note) => ({
+      query: ({ title, listId, position }) => ({
         url: "/notes/insert",
         method: "POST",
-        body: { ...note, position: note.position },
+        body: { title, listId, position },
       }),
       invalidatesTags: ["Notes"],
     }),
@@ -32,7 +32,7 @@ export const noteApi = createApi({
     editNote: builder.mutation({
       query: ({ id, updateNote }) => ({
         url: `notes/updateNote/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: updateNote,
       }),
       invalidatesTags: ["Notes"],

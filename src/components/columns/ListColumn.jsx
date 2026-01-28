@@ -31,6 +31,7 @@ const ListColumn = ({ list, index, moveList }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
   const [sortBy, setSortBy] = useState("sort by");
+  const [selectedNote, setSelectedNote] = useState(null);
 
   const listNotesRaw = Array.isArray(notes)
     ? notes.filter((note) => note.listId === list._id)
@@ -125,15 +126,9 @@ const ListColumn = ({ list, index, moveList }) => {
   const handleAddNote = async (note) => {
     setLoading(true);
     try {
-      const maxPosition =
-        listNotesRaw.length > 0
-          ? Math.max(...listNotesRaw.map((n) => n.position || 0))
-          : 0;
       const newNote = await addNote({
         title: note.title,
-        body: note.body,
         listId: list._id,
-        position: maxPosition + 1,
       }).unwrap();
 
       if (note.imageFile) {
@@ -144,6 +139,7 @@ const ListColumn = ({ list, index, moveList }) => {
       }
       await refetch();
       setIsBoxOpen(false);
+      setSelectedNote(newNote.data);
       toast.success("Note added successfully!");
     } catch (err) {
       toast.error("Failed to add note.");
@@ -186,20 +182,23 @@ const ListColumn = ({ list, index, moveList }) => {
           noteId: id,
           imageFile: updated.imageFile,
         }).unwrap();
-        pictureUrl = res.url;
+        pictureUrl = res.data.picture;
       }
+
+      const updatePayload = {};
+      if (updated.title !== undefined) updatePayload.title = updated.title;
+      if (updated.body !== undefined) updatePayload.body = updated.body;
+      if (pictureUrl !== undefined) updatePayload.picture = pictureUrl;
 
       await editNote({
         id,
-        updateNote: {
-          title: updated.title,
-          body: updated.body,
-          picture: pictureUrl,
-        },
+        updateNote: updatePayload,
       }).unwrap();
+
       await refetch();
       toast.success("Note updated successfully!");
     } catch (err) {
+      console.error("Edit error:", err);
       toast.error("Failed to update note.");
     } finally {
       setLoading(false);

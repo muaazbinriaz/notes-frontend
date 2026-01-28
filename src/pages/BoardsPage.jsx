@@ -46,7 +46,7 @@ const BoardsPage = ({ onSelectBoard }) => {
           <li
             key={board._id}
             onClick={() => onSelectBoard(board._id)}
-            className="cursor-pointer p-6 bg-gray-200 rounded-lg shadow hover:shadow-md hover:bg-blue-50 transition"
+            className="cursor-pointer p-6 bg-gray-300 rounded-lg shadow-xl hover:shadow-md hover:bg-gray-200 transition"
           >
             <span className="text-lg font-semibold text-gray-700">
               {board.title}
