@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import { useInviteBoardMemberMutation } from "../features/lists/boardApi";
 import { useGetBoardByIdQuery } from "../features/lists/boardApi";
-// update
 const SharedBoard = ({ boardId }) => {
   const [email, setEmail] = useState("");
   const [message, setMessgae] = useState("");

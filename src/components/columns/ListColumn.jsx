@@ -38,7 +38,6 @@ const ListColumn = ({ list, index, moveList }) => {
     : [];
   const ref = useRef(null);
   const panelRef = useRef(null);
-
   const filteredNotes = Array.isArray(listNotesRaw)
     ? listNotesRaw.filter((note) => {
         const title = note?.title || "";
@@ -264,7 +263,7 @@ const ListColumn = ({ list, index, moveList }) => {
       } ${isDragging ? "opacity-50 cursor-grabbing" : "opacity-100 cursor-grab"}`}
     >
       <div className="p-4 flex justify-between ">
-        <p className="pl-2 text-[17px] font-semibold text-gray-400">
+        <p className="pl-2 text-[17px] wrap-break-word max-w-52 w-full font-semibold text-gray-400">
           {list.title}
         </p>
         <div className="flex gap-2">
