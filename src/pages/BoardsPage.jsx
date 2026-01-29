@@ -11,7 +11,8 @@ const BoardsPage = ({ onSelectBoard }) => {
   const [createBoard, { isLoading: isCreating }] = useCreateBoardMutation();
   const [title, setTitle] = useState("");
   if (isLoading) return <RoundedLoader />;
-  if (error) return <p>Failed to load boards</p>;
+  if (error)
+    return <p className="text-white text-center">Failed to load boards</p>;
   const titleLimit = 50;
 
   const handleCreate = async () => {
@@ -44,7 +45,7 @@ const BoardsPage = ({ onSelectBoard }) => {
       {boards?.data?.length > 0 ? (
         <h1 className="text-3xl font-bold text-gray-100 my-6">My Boards</h1>
       ) : (
-        <h1 className="text-3xl font-bold text-gray-100 my-6">
+        <h1 className="text-4xl font-bold text-gray-100 my-20">
           Create your first board
         </h1>
       )}
