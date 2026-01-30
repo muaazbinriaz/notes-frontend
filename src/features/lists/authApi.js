@@ -31,7 +31,7 @@ export const authApi = createApi({
 
     acceptInvite: builder.mutation({
       query: ({ inviteId }) => ({
-        url: "/invite/acceptInvite",
+        url: "/invites/acceptInvite",
         method: "POST",
         body: { inviteId },
       }),
