@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import RoundedLoader from "../components/RoundedLoader";
 import { useDispatch } from "react-redux";
@@ -10,6 +10,9 @@ function Signup() {
   const [signup, { isLoading }] = useSignupMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const inviteId = queryParams.get("inviteId");
   const [signupInfo, setSignupInfo] = useState({
     name: "",
     email: "",
@@ -24,13 +27,12 @@ function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     const { name, email, password } = signupInfo;
-
     if (!name || !email || !password) {
       return toast.error("Please fill all fields");
     }
 
     try {
-      const result = await signup({ name, email, password }).unwrap();
+      const result = await signup({ name, email, password, inviteId }).unwrap();
       dispatch(setCredentials({ user: result, token: result.token }));
       localStorage.setItem(
         "auth",
