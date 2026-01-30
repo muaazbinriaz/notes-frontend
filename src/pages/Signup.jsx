@@ -123,7 +123,7 @@ function Signup() {
               </button>
 
               <div className="text-center text-sm text-gray-600 mt-2">
-                Already have an account?{" "}
+                Already have an account?
                 <Link
                   to="/"
                   className="text-gray-900 hover:text-gray-900 border-b font-medium"
