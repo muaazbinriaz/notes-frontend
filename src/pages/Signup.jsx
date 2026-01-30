@@ -32,12 +32,6 @@ function Signup() {
     }
 
     try {
-      // const result = await signup({ name, email, password, inviteId }).unwrap();
-      // dispatch(setCredentials({ user: result, token: result.token }));
-      // localStorage.setItem(
-      //   "auth",
-      //   JSON.stringify({ user: result, token: result.token }),
-      // );
       const result = await signup({ name, email, password, inviteId }).unwrap();
       const user = {
         _id: result._id,
