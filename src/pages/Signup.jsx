@@ -54,7 +54,7 @@ function Signup() {
       setTimeout(() => navigate("/home"), 400);
     } catch (err) {
       console.error("Signup error:", err);
-      toast.error(err.response?.data?.message || "Server error during signup");
+      toast.error(err.data?.message || "Server error during signup");
     }
   };
 
