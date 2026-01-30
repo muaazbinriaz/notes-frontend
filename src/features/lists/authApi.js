@@ -28,8 +28,20 @@ export const authApi = createApi({
         method: "POST",
       }),
     }),
+
+    acceptInvite: builder.mutation({
+      query: ({ inviteId }) => ({
+        url: "/invite/acceptInvite",
+        method: "POST",
+        body: { inviteId },
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useSignupMutation, useLogoutMutation } =
-  authApi;
+export const {
+  useLoginMutation,
+  useSignupMutation,
+  useLogoutMutation,
+  useAcceptInviteMutation,
+} = authApi;
