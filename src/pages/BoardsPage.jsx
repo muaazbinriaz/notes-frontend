@@ -12,7 +12,9 @@ const BoardsPage = ({ onSelectBoard }) => {
   const [title, setTitle] = useState("");
   if (isLoading) return <RoundedLoader />;
   if (error)
-    return <p className="text-white text-center">Failed to load boards</p>;
+    return (
+      <p className="text-white mt-20 text-center">Failed to load boards</p>
+    );
   const titleLimit = 50;
 
   const handleCreate = async () => {
