@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useInviteBoardMemberMutation } from "../features/lists/boardApi";
 import { useGetBoardByIdQuery } from "../features/lists/boardApi";
+import { toast } from "react-toastify";
 const SharedBoard = ({ boardId }) => {
   const [email, setEmail] = useState("");
   const [message, setMessgae] = useState("");
@@ -12,11 +13,12 @@ const SharedBoard = ({ boardId }) => {
     e.preventDefault();
     try {
       await inviteBoardMember({ boardId, email }).unwrap();
+      toast.success("Invitation sent successfully!");
       refetch();
-      setMessgae("Invitation sent!");
       setEmail("");
     } catch (err) {
       setMessgae("Failed to send invite");
+      toast.error("Failed to send invite");
     }
   };
   return (
@@ -27,6 +29,7 @@ const SharedBoard = ({ boardId }) => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleInvite()}
             placeholder="Enter collaborator email"
             required
             className="p-2 border rounded-md outline-gray-500 border-gray-500 bg-gray-200 text-gray-800"

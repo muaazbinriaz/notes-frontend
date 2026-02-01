@@ -43,6 +43,7 @@ const AddList = ({ listCount, boardId, refetchLists }) => {
         value={title}
         autoFocus
         maxLength={titleLimit}
+        onKeyDown={(e) => e.key === "Enter" && handleAdd()}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Enter list title"
         className="w-full p-1 rounded border"

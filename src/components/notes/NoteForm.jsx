@@ -73,6 +73,7 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
               setTitle(e.target.value);
               setTitleCount(e.target.value.length);
             }}
+            onKeyDown={(e) => e.key === "Enter" && submit()}
             maxLength={TITLE_LIMIT}
             autoFocus
             placeholder="Enter card title"
@@ -152,13 +153,14 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
         </label>
         <div className="relative">
           <textarea
-            className="bg-gray-700 text-gray-300 w-full p-3 rounded-lg resize-none outline-none ring-2 ring-gray-500 "
+            className="bg-gray-700 text-gray-300 w-full p-3 rounded-lg resize-none outline-none ring-2 ring-gray-500  overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             rows={5}
             value={body}
             onChange={(e) => {
               setBody(e.target.value);
               setBodyCount(e.target.value.length);
             }}
+            onKeyDown={(e) => e.key === "Enter" && submit()}
             placeholder="Add a more detailed description..."
             maxLength={BODY_LIMIT}
           />
@@ -205,5 +207,4 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
     </div>
   );
 };
-
 export default NoteForm;

@@ -32,6 +32,7 @@ const BoardsPage = ({ onSelectBoard }) => {
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleCreate()}
           maxLength={titleLimit}
           placeholder="New board title"
           className="flex-1 px-3 py-2 border text-gray-100 border-gray-300 rounded-md focus:outline-none"
