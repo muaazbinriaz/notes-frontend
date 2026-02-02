@@ -1,7 +1,8 @@
+import { LuLoaderCircle } from "react-icons/lu";
 const RoundedLoader = () => {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <span className="border-blue-950 h-16 w-16 animate-spin rounded-full border-t-4"></span>
+    <div className="flex justify-center items-center h-screen">
+      <LuLoaderCircle className="animate-spin h-15 w-15 " />
     </div>
   );
 };
