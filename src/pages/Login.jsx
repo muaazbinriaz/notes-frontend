@@ -7,7 +7,7 @@ import {
   useLoginMutation,
   useAcceptInviteMutation,
 } from "../features/lists/authApi";
-import { setCredentials } from "../features/auth/authSlice";
+import { clearAuth, setCredentials } from "../features/auth/authSlice";
 
 function Login() {
   const navigate = useNavigate();
@@ -39,6 +39,8 @@ function Login() {
       return toast.error("Please fill all fields");
     }
     try {
+      localStorage.removeItem("auth");
+      dispatch(clearAuth());
       const result = await login({ email, password }).unwrap();
       dispatch(setCredentials({ user: result, token: result.token }));
       localStorage.setItem(

@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { boardApi } from "../lists/boardApi";
 import { listApi } from "../lists/listApi";
+import { noteApi } from "../lists/noteApi";
+import { authApi } from "../lists/authApi";
 
 const initialState = {
   user: null,
@@ -26,9 +28,12 @@ const authSlice = createSlice({
 export const { setCredentials, clearAuth } = authSlice.actions;
 
 export const logout = () => (dispatch) => {
+  localStorage.removeItem("auth");
   dispatch(clearAuth());
   dispatch(boardApi.util.resetApiState());
   dispatch(listApi.util.resetApiState());
+  dispatch(noteApi.util.resetApiState());
+  dispatch(authApi.util.resetApiState());
 };
 
 export default authSlice.reducer;

@@ -1,7 +1,7 @@
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLogoutMutation } from "../features/lists/authApi";
+import { authApi, useLogoutMutation } from "../features/lists/authApi";
 import { logout as logoutAction } from "../features/auth/authSlice";
 import { boardApi, useGetBoardByIdQuery } from "../features/lists/boardApi";
 import { listApi } from "../features/lists/listApi";
@@ -42,11 +42,12 @@ const Nav = () => {
       console.error("Logout error:", err);
     }
 
-    dispatch(logoutAction());
     localStorage.removeItem("auth");
+    dispatch(logoutAction());
     dispatch(boardApi.util.resetApiState());
     dispatch(listApi.util.resetApiState());
     dispatch(noteApi.util.resetApiState());
+    dispatch(authApi.util.resetApiState());
     setOpen(false);
     navigate("/");
   };
