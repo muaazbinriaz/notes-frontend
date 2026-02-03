@@ -11,6 +11,7 @@ import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import RequireAuth from "./components/RequireAuth";
 import BoardsPage from "./pages/BoardsPage";
+import RequireNoAuth from "./components/RequireNoAuth";
 
 const App = () => {
   const auth = useSelector((state) => state.auth);
@@ -25,8 +26,23 @@ const App = () => {
             path="/"
             element={<Navigate to={auth?.token ? "/boards" : "/login"} />}
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/login"
+            element={
+              <RequireNoAuth>
+                <Login />
+              </RequireNoAuth>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <RequireNoAuth>
+                <Signup />
+              </RequireNoAuth>
+            }
+          />
+
           <Route path="/home" element={<Navigate to="/boards" />} />
           <Route
             path="/boards"
