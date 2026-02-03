@@ -121,7 +121,7 @@ const Nav = () => {
           {open && (
             <div
               ref={dropDown}
-              className="absolute right-1 mt-0 w-65 bg-gray-100 border border-gray-200 rounded-md shadow-md z-10 wrap-break-word"
+              className="absolute right-1 mt-12 w-65 bg-gray-100 border border-gray-200 rounded-md shadow-md z-10 wrap-break-word"
             >
               <div className="p-4">
                 <p className="text-gray-700 wrap-break-word">
