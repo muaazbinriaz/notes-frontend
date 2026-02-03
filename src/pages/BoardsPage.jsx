@@ -15,7 +15,7 @@ const BoardsPage = ({ onSelectBoard }) => {
     return (
       <p className="text-white mt-20 text-center">Failed to load boards</p>
     );
-  const titleLimit = 50;
+  const titleLimit = 30;
 
   const handleCreate = async () => {
     if (!title.trim()) return;
@@ -28,7 +28,7 @@ const BoardsPage = ({ onSelectBoard }) => {
   return (
     <div className="flex flex-col items-center mt-10 px-4">
       {isCreating && <RoundedLoader />}
-      <div className="flex gap-2 w-full max-w-md">
+      <div className="flex gap-2 w-full max-w-sm">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -52,16 +52,21 @@ const BoardsPage = ({ onSelectBoard }) => {
           Create your first board
         </h1>
       )}
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 wrap-break-word gap-4 w-full max-w-4xl mb-6">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 wrap-break-word gap-4 w-full max-w-5xl mb-6">
         {boards?.data?.map((board) => (
           <li
             key={board._id}
             onClick={() => onSelectBoard(board._id)}
             className="cursor-pointer p-2 px-4.5 bg-gray-300 rounded-lg shadow-xl hover:shadow-md hover:bg-gray-200 transition"
           >
-            <span className="text-lg font-semibold text-gray-700">
+            <span className="text-lg font-semibold text-gray-700  ">
               {board.title}
             </span>
+            <hr className="text-gray-400 mt-2" />
+            <div className="flex justify-between items-center text-gray-700">
+              <p>Members : {board.members.length}</p>
+              <p>Created : {new Date(board.createdAt).toLocaleDateString()}</p>
+            </div>
           </li>
         ))}
       </ul>
