@@ -121,11 +121,15 @@ const Nav = () => {
           {open && (
             <div
               ref={dropDown}
-              className="absolute right-1 mt-0 w-65 bg-gray-100 border border-gray-200 rounded-md shadow-md z-10"
+              className="absolute right-1 mt-0 w-65 bg-gray-100 border border-gray-200 rounded-md shadow-md z-10 wrap-break-word"
             >
               <div className="p-4">
-                <p className="text-gray-700">{auth?.user?.name}</p>
-                <p className="text-gray-500">{auth?.user?.email}</p>
+                <p className="text-gray-700 wrap-break-word">
+                  {auth?.user?.name}
+                </p>
+                <p className="text-gray-500 wrap-break-word">
+                  {auth?.user?.email}
+                </p>
                 <button
                   onClick={handleLogout}
                   className="mt-2 cursor-pointer bg-[#565758] hover:bg-[#333333] transition duration-300 text-white px-3 py-1 rounded-md"

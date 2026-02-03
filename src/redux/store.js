@@ -20,9 +20,3 @@ export const store = configureStore({
       .concat(authApi.middleware)
       .concat(boardApi.middleware),
 });
-
-const storedAuth = localStorage.getItem("auth");
-if (storedAuth) {
-  const parsed = JSON.parse(storedAuth);
-  store.dispatch(setCredentials(parsed));
-}

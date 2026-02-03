@@ -4,9 +4,11 @@ import { listApi } from "../lists/listApi";
 import { noteApi } from "../lists/noteApi";
 import { authApi } from "../lists/authApi";
 
+const storedAuth = localStorage.getItem("auth");
+const parsed = storedAuth ? JSON.parse(storedAuth) : null;
 const initialState = {
-  user: null,
-  token: null,
+  user: parsed?.user || null,
+  token: parsed?.token || null,
 };
 
 const authSlice = createSlice({
