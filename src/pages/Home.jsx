@@ -11,7 +11,7 @@ import { useRef } from "react";
 import socket from "../socket/socket";
 import { useDispatch } from "react-redux";
 import { noteApi } from "../features/lists/noteApi";
-
+// commit
 const Home = () => {
   const { boardId } = useParams();
   const dispatch = useDispatch();
