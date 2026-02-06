@@ -8,6 +8,7 @@ import { listApi } from "../features/lists/listApi";
 import { noteApi } from "../features/lists/noteApi";
 import SharedBoard from "./SharedBoard";
 import { IoIosClose } from "react-icons/io";
+import socket from "../socket/socket";
 
 const Nav = () => {
   const navigate = useNavigate();
@@ -24,6 +25,12 @@ const Nav = () => {
   const { data: boardData } = useGetBoardByIdQuery(boardId, {
     skip: !isHomePage || !boardId,
   });
+  const [localBoard, setLocalBoard] = useState(null);
+  useEffect(() => {
+    if (boardData?.data) {
+      setLocalBoard(boardData.data);
+    }
+  }, [boardData]);
   const board = boardData?.data;
   const firstLetter = auth?.user?.name
     ? auth.user.name.charAt(0).toUpperCase()
@@ -56,7 +63,22 @@ const Nav = () => {
     document.addEventListener("mousedown", closeDropdown);
     return () => document.removeEventListener("mousedown", closeDropdown);
   }, []);
-
+  useEffect(() => {
+    if (boardId) {
+      socket.emit("join-board", boardId.toString());
+    }
+    socket.on("member-added", (payload) => {
+      if (payload.boardId === boardId) {
+        setLocalBoard((prev) => ({
+          ...prev,
+          members: [...prev.members, payload.member],
+        }));
+      }
+    });
+    return () => {
+      socket.off("member-added");
+    };
+  }, [boardId]);
   return (
     <div className="bg-gray-500/30  shadow-xl border-white/20 text-white flex justify-between items-center px-10 py-3 ">
       <div>
@@ -84,19 +106,20 @@ const Nav = () => {
                 </button>
                 <div className="p-4 border-gray-200 ">
                   <SharedBoard boardId={boardId} />
-                  {board && (
+                  {localBoard && (
                     <div className="mt-4">
                       <h3 className="font-semibold mb-2">
                         Board Collaborators
                       </h3>
                       <ul className="list-disc list-inside">
-                        {board?.ownerId && (
+                        {localBoard?.ownerId && (
                           <li>
-                            {board.ownerId.name} ({board.ownerId.email}) - owner
+                            {localBoard.ownerId.name} (
+                            {localBoard.ownerId.email}) - owner
                           </li>
                         )}
-                        {board?.members?.length > 0 ? (
-                          board.members.map((m) => (
+                        {localBoard?.members?.length > 0 ? (
+                          localBoard.members.map((m) => (
                             <li key={m._id}>
                               {m.name} ({m.email})
                             </li>

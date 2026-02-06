@@ -12,11 +12,20 @@ import NotFound from "./pages/NotFound";
 import RequireAuth from "./components/RequireAuth";
 import BoardsPage from "./pages/BoardsPage";
 import RequireNoAuth from "./components/RequireNoAuth";
+import { useEffect } from "react";
+import socket from "./socket/socket";
 
 const App = () => {
   const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
+  useEffect(() => {
+    console.log("Trying to connect socket");
+    socket.connect();
+    return () => {
+      console.log("Disconnecting socket");
+      socket.disconnect();
+    };
+  }, []);
   return (
     <>
       <div className="bg-[linear-gradient(90deg,rgba(57,35,170,1)_0%,rgba(110,49,165,1)_50%,rgba(192,67,159,1)_100%)] min-h-screen">

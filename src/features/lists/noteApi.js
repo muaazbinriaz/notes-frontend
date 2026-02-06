@@ -18,7 +18,7 @@ export const noteApi = createApi({
         method: "POST",
         body: { title, listId, position },
       }),
-      invalidatesTags: ["Notes"],
+      invalidatesTags: ({ listId }) => [{ type: "Notes", id: listId }],
     }),
 
     deleteNote: builder.mutation({

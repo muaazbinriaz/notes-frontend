@@ -19,7 +19,7 @@ import { useDeleteListMutation } from "../../features/lists/listApi";
 import RoundedLoader from "../RoundedLoader";
 
 const ListColumn = ({ list, index, moveList }) => {
-  const { data: notes, refetch } = useGetNotesQuery(list._id);
+  const { data: notes } = useGetNotesQuery(list._id);
   const [addNote] = useAddNoteMutation();
   const [deleteNote] = useDeleteNoteMutation();
   const [editNote] = useEditNoteMutation();
@@ -136,7 +136,6 @@ const ListColumn = ({ list, index, moveList }) => {
           imageFile: note.imageFile,
         }).unwrap();
       }
-      await refetch();
       setIsBoxOpen(false);
       setSelectedNote(newNote.data);
       toast.success("Note added successfully!");
@@ -161,7 +160,6 @@ const ListColumn = ({ list, index, moveList }) => {
       setLoading(true);
       try {
         await deleteNote(id).unwrap();
-        await refetch();
         toast.success("Note deleted successfully!");
       } catch (err) {
         toast.error("Failed to delete note.");
@@ -175,7 +173,6 @@ const ListColumn = ({ list, index, moveList }) => {
     setLoading(true);
     try {
       let pictureUrl = updated.picture;
-
       if (updated.imageFile) {
         const res = await uploadImage({
           noteId: id,
@@ -183,7 +180,6 @@ const ListColumn = ({ list, index, moveList }) => {
         }).unwrap();
         pictureUrl = res.data.picture;
       }
-
       const updatePayload = {};
       if (updated.title !== undefined) updatePayload.title = updated.title;
       if (updated.body !== undefined) updatePayload.body = updated.body;
@@ -193,8 +189,6 @@ const ListColumn = ({ list, index, moveList }) => {
         id,
         updateNote: updatePayload,
       }).unwrap();
-
-      await refetch();
       toast.success("Note updated successfully!");
     } catch (err) {
       console.error("Edit error:", err);
@@ -207,7 +201,6 @@ const ListColumn = ({ list, index, moveList }) => {
   const handleEllipse = () => {
     setIsPanelOpen((prev) => !prev);
   };
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target.closest(".ellipse-button")) {

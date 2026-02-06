@@ -23,6 +23,7 @@
     "react-router-dom": "^7.11.0",
     "react-sortablejs": "^6.1.4",
     "react-toastify": "^11.0.5",
+    "socket.io-client": "^4.8.3",
     "sortablejs": "^1.15.6",
     "swapy": "^1.0.5",
     "sweetalert2": "^11.26.17"
