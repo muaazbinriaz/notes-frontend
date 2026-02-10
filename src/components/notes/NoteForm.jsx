@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
 import { FaPaperclip } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
 
 const TITLE_LIMIT = 60;
 const BODY_LIMIT = 500;
@@ -15,6 +14,8 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
   const fileInputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [tags, setTags] = useState(initialData?.tags || []);
+  const [tagInput, setTagInput] = useState("");
 
   useEffect(() => {
     if (initialData) {
@@ -35,6 +36,7 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
       body: body.trim(),
       imageFile,
       picture: previewUrl || (initialData ? initialData.picture : null),
+      tags,
     };
 
     onSubmit(payload);
@@ -160,7 +162,6 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
               setBody(e.target.value);
               setBodyCount(e.target.value.length);
             }}
-            onKeyDown={(e) => e.key === "Enter" && submit()}
             placeholder="Add a more detailed description..."
             maxLength={BODY_LIMIT}
           />
@@ -169,6 +170,44 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
           </span>
         </div>
       </div>
+
+      <div className="mb-4">
+        <label className="text-gray-300 text-sm font-semibold mb-2 block">
+          Tags
+        </label>
+        <div className="flex flex-wrap gap-2 mb-2">
+          {tags.map((tag, index) => (
+            <span
+              key={index}
+              className="px-2 py-1 bg-blue-600 text-white rounded text-xs cursor-pointer flex items-center gap-1"
+            >
+              {tag}
+              <button
+                type="button"
+                onClick={() => setTags(tags.filter((t) => t !== tag))}
+                className="ml-1 text-white hover:text-red-300 cursor-pointer"
+              >
+                <RxCross2 className="size-3" />
+              </button>
+            </span>
+          ))}
+        </div>
+        <input
+          type="text"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && tagInput.trim()) {
+              e.preventDefault();
+              setTags([...tags, tagInput.trim()]);
+              setTagInput("");
+            }
+          }}
+          placeholder="Type a tag and press Enter"
+          className="bg-gray-700 text-gray-300 w-full p-2 rounded-lg outline-none ring-2 ring-gray-500"
+        />
+      </div>
+
       <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-600">
         <button
           className="text-gray-300 hover:bg-gray-600 p-2 rounded flex items-center gap-2 cursor-pointer"

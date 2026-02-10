@@ -4,6 +4,7 @@ import { noteApi } from "../features/lists/noteApi";
 import { authApi } from "../features/lists/authApi";
 import authReducer, { setCredentials } from "../features/auth/authSlice";
 import { boardApi } from "../features/lists/boardApi";
+import { automationApi } from "../features/lists/automationApi";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     [noteApi.reducerPath]: noteApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [boardApi.reducerPath]: boardApi.reducer,
+    [automationApi.reducerPath]: automationApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -18,5 +20,6 @@ export const store = configureStore({
       .concat(listApi.middleware)
       .concat(noteApi.middleware)
       .concat(authApi.middleware)
-      .concat(boardApi.middleware),
+      .concat(boardApi.middleware)
+      .concat(automationApi.middleware),
 });

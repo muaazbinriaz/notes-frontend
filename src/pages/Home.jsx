@@ -11,7 +11,8 @@ import { useRef } from "react";
 import socket from "../socket/socket";
 import { useDispatch } from "react-redux";
 import { noteApi } from "../features/lists/noteApi";
-// commit
+import AutomationModal from "../components/AutomationModal";
+
 const Home = () => {
   const { boardId } = useParams();
   const dispatch = useDispatch();
@@ -19,6 +20,8 @@ const Home = () => {
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [showAutomation, setShowAutomation] = useState(false);
+
   const {
     data: lists,
     isLoading,
@@ -200,7 +203,7 @@ const Home = () => {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-100px)]">
+      <div className="flex justify-center items-center max-h-[calc(100vh-100px)]">
         <p className="text-red-500 text-lg">
           Error: {error?.data?.message || "Something went wrong"}
         </p>
@@ -209,9 +212,19 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)]">
+    <div className="fixed inset-0 top-14 flex flex-col">
+      <div className="p-4 flex justify-end bg-[#624A95]/80 shadow-xl border-white/20 text-white items-center px-10 py-1.5 mb-2.5 shrink-0">
+        <button
+          onClick={() => setShowAutomation(true)}
+          className="px-2 py-0 bg-purple-600 text-white cursor-pointer rounded-md hover:bg-purple-700 transition-colors flex items-center"
+        >
+          <span>⚡</span>
+          <span>Automation</span>
+        </button>
+      </div>
+
       <div
-        className="flex items-start gap-6 p-4 flex-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] overflow-y-hidden "
+        className="flex items-start gap-6 px-4 pb-5 flex-1 overflow-x-auto overflow-y-hidden custom-scrollbar"
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseLeave={handleMouseLeave}
@@ -238,6 +251,14 @@ const Home = () => {
           refetchLists={refetch}
         />
       </div>
+
+      {showAutomation && (
+        <AutomationModal
+          boardId={boardId}
+          lists={localLists}
+          onClose={() => setShowAutomation(false)}
+        />
+      )}
     </div>
   );
 };

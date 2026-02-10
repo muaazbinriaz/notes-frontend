@@ -128,6 +128,7 @@ const ListColumn = ({ list, index, moveList }) => {
       const newNote = await addNote({
         title: note.title,
         listId: list._id,
+        tags: note.tags || [],
       }).unwrap();
 
       if (note.imageFile) {
@@ -184,6 +185,7 @@ const ListColumn = ({ list, index, moveList }) => {
       if (updated.title !== undefined) updatePayload.title = updated.title;
       if (updated.body !== undefined) updatePayload.body = updated.body;
       if (pictureUrl !== undefined) updatePayload.picture = pictureUrl;
+      if (updated.tags !== undefined) updatePayload.tags = updated.tags;
 
       await editNote({
         id,

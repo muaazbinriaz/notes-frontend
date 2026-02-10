@@ -74,6 +74,19 @@ const NoteItem = ({ note, index, onDelete, onEdit }) => {
           )}
 
           <div className="text-gray-300 font-medium">{note.title}</div>
+          {note.tags && note.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {note.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="px-2 py-1 rounded text-xs font-medium text-white bg-blue-600"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           {note.body && (
             <div className="mt-2">
               <MdSubject

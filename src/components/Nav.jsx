@@ -80,10 +80,9 @@ const Nav = () => {
     };
   }, [boardId]);
   return (
-    <div className="bg-gray-500/30  shadow-xl border-white/20 text-white flex justify-between items-center px-10 py-3 ">
+    <div className="bg-[#473699]/70 border-b shadow-xl border-white/20 text-white flex justify-between items-center px-10 py-1.5 ">
       <div>
-        <h1 className="font-bold text-4xl leading-11">Notes App</h1>
-        <p className="text-[17px]">Take Notes and never forget</p>
+        <h1 className="font-medium text-3xl leading-11">Trello App</h1>
       </div>
       {auth?.token && (
         <div className="flex gap-3">
@@ -136,7 +135,7 @@ const Nav = () => {
           )}
           <button
             onClick={() => setOpen(!open)}
-            className="w-10 h-10 cursor-pointer rounded-full bg-[#4f4f4f] hover:bg-[#414142] duration-200 text-white font-bold flex items-center justify-center"
+            className="h-8 w-8 cursor-pointer rounded-full bg-[#4f4f4f] hover:bg-[#414142] font-medium duration-200 text-white flex items-center justify-center"
           >
             {firstLetter}
           </button>
