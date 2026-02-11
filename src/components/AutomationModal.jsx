@@ -24,6 +24,7 @@ function AutomationModal({ boardId, lists, onClose }) {
 
     try {
       const ruleData = {
+        boardId,
         trigger,
         action,
         conditions: { tag: tagName },
