@@ -12,7 +12,7 @@ function AutomationModal({ boardId, lists, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!tagName.trim()) {
+    if (trigger === "tag-verified" && !tagName.trim()) {
       toast.error("Please enter a tag name");
       return;
     }
@@ -27,7 +27,7 @@ function AutomationModal({ boardId, lists, onClose }) {
         boardId,
         trigger,
         action,
-        conditions: { tag: tagName },
+        conditions: trigger === "tag-verified" ? { tag: tagName } : {},
       };
       if (action === "move") {
         ruleData.destination = destinationListTitle;
@@ -43,6 +43,19 @@ function AutomationModal({ boardId, lists, onClose }) {
       console.error(error);
     }
   };
+  const triggerText =
+    trigger === "new-entry"
+      ? "a new note is added"
+      : `tag "${tagName || "verified"}" is added to any note`;
+
+  const sortByText =
+    {
+      createdAt: "creation date (oldest first)",
+      createdAtDesc: "creation date (newest first)",
+      name: "name (A → Z)",
+      nameDesc: "name (Z → A)",
+      position: "position",
+    }[sortBy] ?? "position";
 
   return (
     <div className="fixed inset-0 bg-gray-500/30 bg-opacity-50 flex items-center justify-center z-50">
@@ -70,21 +83,24 @@ function AutomationModal({ boardId, lists, onClose }) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none appearance-none"
             >
               <option value="tag-verified">When tag is added/updated</option>
+              <option value="new-entry">When new entry is added</option>
             </select>
           </div>
+          {trigger === "tag-verified" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                If note has tag
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., urgent, verified, done"
+                value={tagName}
+                onChange={(e) => setTagName(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              If note has tag
-            </label>
-            <input
-              type="text"
-              placeholder="e.g., urgent, verified, done"
-              value={tagName}
-              onChange={(e) => setTagName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Then (Action)
@@ -118,6 +134,7 @@ function AutomationModal({ boardId, lists, onClose }) {
               </select>
             </div>
           )}
+
           {action === "sortBy" && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -129,7 +146,11 @@ function AutomationModal({ boardId, lists, onClose }) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
               >
                 <option value="createdAt">Creation Date (Oldest first)</option>
+                <option value="createdAtDesc">
+                  Creation Date (Newest first)
+                </option>
                 <option value="name">Name (A → Z)</option>
+                <option value="nameDesc">Name (Z → A)</option>
               </select>
             </div>
           )}
@@ -151,23 +172,16 @@ function AutomationModal({ boardId, lists, onClose }) {
             </button>
           </div>
         </form>
-
         <div className="mt-4 p-3 bg-gray-50 rounded text-sm text-gray-700">
           <strong>Example:</strong>{" "}
           {action === "move" ? (
             <>
-              When tag "{tagName || "verified"}" is added to any note, move it
-              to list "{destinationListTitle || "Completed"}"
+              When {triggerText}, move it to list "
+              {destinationListTitle || "Completed"}"
             </>
           ) : (
             <>
-              When tag "{tagName || "sorted"}" is added to any note, sort all
-              notes in the list by{" "}
-              {sortBy === "createdAt"
-                ? "creation date"
-                : sortBy === "name"
-                  ? "name"
-                  : "position"}
+              When {triggerText}, sort all notes in the list by {sortByText}
             </>
           )}
         </div>
