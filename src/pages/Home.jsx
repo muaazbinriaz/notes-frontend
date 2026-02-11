@@ -140,7 +140,7 @@ const Home = () => {
       dispatch(
         noteApi.util.updateQueryData(
           "getNotes",
-          movedNote.oldListId,
+          movedNote.oldListId.toString(),
           (draft) => {
             return draft.filter((note) => note._id !== movedNote._id);
           },
@@ -159,6 +159,21 @@ const Home = () => {
       );
     };
 
+    const handleNotesSorted = ({ listId, sortedNote }) => {
+      dispatch(
+        noteApi.util.updateQueryData("getNotes", listId, (draft) => {
+          const positionMap = new Map(
+            sortedNote.map((n) => [n._id, n.position]),
+          );
+          draft.forEach((note) => {
+            if (positionMap.has(note._id)) {
+              note.position = positionMap.get(note._id);
+            }
+          });
+          draft.sort((a, b) => a.position - b.position);
+        }),
+      );
+    };
     socket.on("list-created", handleListCreated);
     socket.on("list-deleted", handleListDeleted);
     socket.on("lists-reordered", handleReorderedList);
@@ -166,6 +181,7 @@ const Home = () => {
     socket.on("note-deleted", handleNoteDeleted);
     socket.on("note-updated", handleNoteUpdated);
     socket.on("note-moved", handleNoteMoved);
+    socket.on("notes-sorted", handleNotesSorted);
 
     return () => {
       socket.emit("leave-board", boardId);
@@ -176,6 +192,7 @@ const Home = () => {
       socket.off("note-deleted", handleNoteDeleted);
       socket.off("note-updated", handleNoteUpdated);
       socket.off("note-moved", handleNoteMoved);
+      socket.off("notes-sorted", handleNotesSorted);
     };
   }, [boardId, dispatch]);
 

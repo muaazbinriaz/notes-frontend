@@ -220,18 +220,17 @@ const NoteForm = ({ initialData, onSubmit, onClose, onDelete }) => {
 
         <div className="flex items-center gap-2">
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded cursor-pointer"
-            onClick={submit}
-          >
-            Save
-          </button>
-
-          <button
             className=" cursor-pointer bg-red-700 hover:bg-red-600 text-white py-2.5 px-4 font-medium rounded flex items-center gap-2 duration-200"
             onClick={onDelete}
             title="Delete card"
           >
             <span className="text-sm">Delete</span>
+          </button>
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded cursor-pointer"
+            onClick={submit}
+          >
+            Save
           </button>
         </div>
       </div>

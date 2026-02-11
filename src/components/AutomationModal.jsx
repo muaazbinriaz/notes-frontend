@@ -7,23 +7,34 @@ function AutomationModal({ boardId, lists, onClose }) {
   const [action, setAction] = useState("move");
   const [tagName, setTagName] = useState("");
   const [destinationListTitle, setDestinationListTitle] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
   const [createRule, { isLoading }] = useCreateAutomationRuleMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!tagName.trim()) {
+      toast.error("Please enter a tag name");
+      return;
+    }
 
-    if (!tagName.trim() || !destinationListTitle.trim()) {
-      toast.error("Please fill all fields");
+    if (action === "move" && !destinationListTitle.trim()) {
+      toast.error("Please select a destination list");
       return;
     }
 
     try {
-      await createRule({
+      const ruleData = {
         trigger,
         action,
         conditions: { tag: tagName },
-        destination: destinationListTitle,
-      }).unwrap();
+      };
+      if (action === "move") {
+        ruleData.destination = destinationListTitle;
+      } else if (action === "sortBy") {
+        ruleData.by = sortBy;
+      }
+
+      await createRule(ruleData).unwrap();
       toast.success("Automation rule created!");
       onClose();
     } catch (error) {
@@ -73,7 +84,6 @@ function AutomationModal({ boardId, lists, onClose }) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Then (Action)
@@ -84,6 +94,7 @@ function AutomationModal({ boardId, lists, onClose }) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none appearance-none"
             >
               <option value="move">Move note to list</option>
+              <option value="sortBy">Sort notes in list</option>
             </select>
           </div>
 
@@ -99,10 +110,25 @@ function AutomationModal({ boardId, lists, onClose }) {
               >
                 <option value="">Select a list</option>
                 {lists.map((l) => (
-                  <option key={l.id} value={l.title}>
+                  <option key={l._id} value={l.title}>
                     {l.title}
                   </option>
                 ))}
+              </select>
+            </div>
+          )}
+          {action === "sortBy" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sort By
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+              >
+                <option value="createdAt">Creation Date (Oldest first)</option>
+                <option value="name">Name (A → Z)</option>
               </select>
             </div>
           )}
@@ -126,8 +152,23 @@ function AutomationModal({ boardId, lists, onClose }) {
         </form>
 
         <div className="mt-4 p-3 bg-gray-50 rounded text-sm text-gray-700">
-          <strong>Example:</strong> When tag "verified" is added to any note,
-          move it to list "Completed"
+          <strong>Example:</strong>{" "}
+          {action === "move" ? (
+            <>
+              When tag "{tagName || "verified"}" is added to any note, move it
+              to list "{destinationListTitle || "Completed"}"
+            </>
+          ) : (
+            <>
+              When tag "{tagName || "sorted"}" is added to any note, sort all
+              notes in the list by{" "}
+              {sortBy === "createdAt"
+                ? "creation date"
+                : sortBy === "name"
+                  ? "name"
+                  : "position"}
+            </>
+          )}
         </div>
       </div>
     </div>
